@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
   background-color: var(--tg-theme-bg-color, #ffffff);
   color: var(--tg-theme-text-color, #000000);
   font-family: 'Inter', sans-serif;
@@ -14,10 +20,15 @@ body {
   display: none;
 }
 
-/* Утилита для безопасных отступов (Safe Area) */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
-}
+/* Утилиты для безопасных отступов (Safe Area) */
 .pt-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Специальный отступ для контента, чтобы кнопки Telegram не перекрывали его */
+.safe-top-offset {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
 }

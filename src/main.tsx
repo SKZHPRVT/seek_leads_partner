@@ -4,6 +4,7 @@ import App from './App'
 import './index.css'
 import { initTelegram } from './lib/tg'
 
+// Инициализация (ready, expand, requestFullscreen)
 initTelegram()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

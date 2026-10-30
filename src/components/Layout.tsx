@@ -27,13 +27,22 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
 
   return (
     <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden">
-      {/* Скроллируемый контент */}
-      <main className="flex-1 overflow-y-auto" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      {/* Скроллируемый контент с безопасным верхним отступом */}
+      <main 
+        className="flex-1 overflow-y-auto" 
+        style={{ 
+          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)', // 56px — примерная высота шапки Telegram
+          paddingBottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))' 
+        }}
+      >
         {children}
       </main>
       
       {/* Фиксированное нижнее меню */}
-      <nav className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav 
+        className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 z-50" 
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
         <div className="flex justify-around items-center h-16 px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon
