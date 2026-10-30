@@ -1,18 +1,22 @@
 import { ReactNode } from 'react'
-import { LayoutDashboard, Search, Users } from 'lucide-react'
+import { LayoutDashboard, Search, Trophy, Link2, User } from 'lucide-react'
 import clsx from 'clsx'
+
+export type TabType = 'dashboard' | 'search' | 'achievements' | 'integrations' | 'profile'
 
 interface LayoutProps {
   children: ReactNode
-  activeTab: 'dashboard' | 'search' | 'partner'
-  onTabChange: (tab: 'dashboard' | 'search' | 'partner') => void
+  activeTab: TabType
+  onTabChange: (tab: TabType) => void
 }
 
 export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   const tabs = [
     { id: 'dashboard', label: 'Главная', icon: LayoutDashboard },
     { id: 'search', label: 'Поиск', icon: Search },
-    { id: 'partner', label: 'Партнер', icon: Users },
+    { id: 'achievements', label: 'Ачивки', icon: Trophy },
+    { id: 'integrations', label: 'Связи', icon: Link2 },
+    { id: 'profile', label: 'Профиль', icon: User },
   ] as const
 
   return (
@@ -21,8 +25,8 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
         {children}
       </main>
       
-      <nav className="fixed bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 pb-safe">
-        <div className="flex justify-around items-center h-16">
+      <nav className="fixed bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 pb-safe z-50">
+        <div className="flex justify-around items-center h-16 px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -31,12 +35,12 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
                 className={clsx(
-                  "flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors",
+                  "flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors rounded-lg",
                   isActive ? "text-tg-button" : "text-tg-hint hover:text-tg-text"
                 )}
               >
-                <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-[10px] font-medium">{tab.label}</span>
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                <span className="text-[10px] font-medium truncate w-full text-center">{tab.label}</span>
               </button>
             )
           })}
