@@ -1,13 +1,11 @@
-import { Database, Link2, Bot, Sparkles, Code2, CheckCircle2 } from 'lucide-react'
-import WebApp from '@twa-dev/sdk'
+import { Database, Link2, Bot, Sparkles, Code2, ChevronRight } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
-export function IntegrationsScreen() {
-  const handleConnect = (name: string) => {
-    haptic('medium')
-    WebApp.showAlert(`Подключение ${name} будет доступно в ближайшем обновлении!`)
-  }
+interface IntegrationsScreenProps {
+  onNavigateToDetail: (integrationId: string) => void
+}
 
+export function IntegrationsScreen({ onNavigateToDetail }: IntegrationsScreenProps) {
   const integrations = [
     { 
       id: 'bitrix', 
@@ -16,7 +14,6 @@ export function IntegrationsScreen() {
       icon: Database, 
       color: 'text-blue-500', 
       bg: 'bg-blue-500/10',
-      status: 'Подключить'
     },
     { 
       id: 'amo', 
@@ -25,7 +22,6 @@ export function IntegrationsScreen() {
       icon: Link2, 
       color: 'text-purple-500', 
       bg: 'bg-purple-500/10',
-      status: 'Подключить'
     },
     { 
       id: 'alice', 
@@ -34,7 +30,6 @@ export function IntegrationsScreen() {
       icon: Bot, 
       color: 'text-yellow-500', 
       bg: 'bg-yellow-500/10',
-      status: 'Подключить'
     },
     { 
       id: 'mcp', 
@@ -43,7 +38,6 @@ export function IntegrationsScreen() {
       icon: Sparkles, 
       color: 'text-green-500', 
       bg: 'bg-green-500/10',
-      status: 'Подключить'
     },
     { 
       id: 'api', 
@@ -52,7 +46,6 @@ export function IntegrationsScreen() {
       icon: Code2, 
       color: 'text-gray-500', 
       bg: 'bg-gray-500/10',
-      status: 'API-ключ'
     },
   ]
 
@@ -67,32 +60,28 @@ export function IntegrationsScreen() {
         {integrations.map((item) => {
           const Icon = item.icon
           return (
-            <div 
+            <button 
               key={item.id}
-              className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10"
+              onClick={() => { haptic('light'); onNavigateToDetail(item.id); }}
+              className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 flex items-center justify-between active:scale-[0.98] transition-transform text-left"
             >
-              <div className="flex items-start space-x-4">
+              <div className="flex items-center space-x-4 flex-1">
                 <div className={`w-12 h-12 rounded-xl ${item.bg} flex items-center justify-center flex-shrink-0`}>
                   <Icon size={24} className={item.color} />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-base mb-1">{item.name}</h3>
-                  <p className="text-xs text-tg-hint mb-3">{item.desc}</p>
-                  <button 
-                    onClick={() => handleConnect(item.name)}
-                    className="text-sm font-medium text-brand bg-brand/10 px-3 py-1.5 rounded-lg active:bg-brand/20 transition-colors"
-                  >
-                    {item.status}
-                  </button>
+                  <p className="text-xs text-tg-hint">{item.desc}</p>
                 </div>
               </div>
-            </div>
+              <ChevronRight size={20} className="text-tg-hint flex-shrink-0" />
+            </button>
           )
         })}
       </div>
 
       <div className="bg-brand/5 rounded-2xl p-4 border border-brand/10 flex items-start space-x-3">
-        <CheckCircle2 size={20} className="text-brand flex-shrink-0 mt-0.5" />
+        <Sparkles size={20} className="text-brand flex-shrink-0 mt-0.5" />
         <div>
           <p className="font-medium text-sm text-brand mb-1">Безопасно и просто</p>
           <p className="text-xs text-tg-hint">Для CRM API-ключ не нужен — аккаунт привязывается в один клик. Все данные передаются по HTTPS.</p>

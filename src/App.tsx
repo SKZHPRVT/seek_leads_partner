@@ -3,6 +3,7 @@ import { Layout, TabType } from './components/Layout'
 import { DashboardScreen } from './components/screens/DashboardScreen'
 import { SearchScreen } from './components/screens/SearchScreen'
 import { IntegrationsScreen } from './components/screens/IntegrationsScreen'
+import { IntegrationDetailScreen } from './components/screens/IntegrationDetailScreen'
 import { ProfileScreen } from './components/screens/ProfileScreen'
 import { HistoryScreen } from './components/screens/HistoryScreen'
 import { TariffsScreen } from './components/screens/TariffsScreen'
@@ -28,6 +29,7 @@ function App() {
   const [showPayments, setShowPayments] = useState(false)
   const [showSecurity, setShowSecurity] = useState(false)
   const [showIncome, setShowIncome] = useState(false)
+  const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null)
 
   if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
   if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
@@ -39,6 +41,7 @@ function App() {
   if (showPayments) return <PaymentsScreen onClose={() => setShowPayments(false)} />
   if (showSecurity) return <SecurityScreen onClose={() => setShowSecurity(false)} />
   if (showIncome) return <IncomeScreen onClose={() => setShowIncome(false)} />
+  if (selectedIntegration) return <IntegrationDetailScreen integrationId={selectedIntegration} onClose={() => setSelectedIntegration(null)} />
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -51,7 +54,9 @@ function App() {
       )}
       {activeTab === 'search' && <SearchScreen onNavigateToAuth={() => setShowAuth(true)} />}
       {activeTab === 'tasks' && <TasksScreen />}
-      {activeTab === 'integrations' && <IntegrationsScreen />}
+      {activeTab === 'integrations' && (
+        <IntegrationsScreen onNavigateToDetail={(id) => setSelectedIntegration(id)} />
+      )}
       {activeTab === 'profile' && (
         <ProfileScreen 
           onNavigateToTariffs={() => setShowTariffs(true)} 
