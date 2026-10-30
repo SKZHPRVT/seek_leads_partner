@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2, LogIn } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
@@ -13,12 +13,17 @@ interface Company {
   vk?: boolean;
 }
 
-export function SearchScreen() {
+interface SearchScreenProps {
+  onNavigateToAuth: () => void;
+}
+
+export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
   const [query, setQuery] = useState('стоматологии в Казани')
   const [isSearching, setIsSearching] = useState(false)
   const [results, setResults] = useState<Company[]>([])
   const [showKeyInput, setShowKeyInput] = useState(false)
   const [apiKey, setApiKey] = useState(localStorage.getItem('trinity_api_key') || '')
+  const [jwt, setJwt] = useState(localStorage.getItem('trinity_jwt') || '')
   const [error, setError] = useState<string | null>(null)
   const [takenLeads, setTakenLeads] = useState<number[]>(JSON.parse(localStorage.getItem('taken_leads') || '[]'))
 
@@ -34,7 +39,8 @@ export function SearchScreen() {
     setError(null)
     setResults([])
 
-    if (!apiKey.trim()) {
+    // Если нет ни JWT, ни API-ключа — показываем мок
+    if (!jwt.trim() && !apiKey.trim()) {
       setTimeout(() => {
         setResults(mockResults)
         setIsSearching(false)
@@ -44,16 +50,24 @@ export function SearchScreen() {
     }
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      if (jwt) headers['Authorization'] = `Bearer ${jwt}`
+      if (apiKey) headers['X-API-Key'] = apiKey
+
       const response = await fetch('https://seek-leads.ru/api/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey.trim()
-        },
+        headers,
         body: JSON.stringify({ query, limit: 10, channels: ["msp"] })
       })
 
-      if (!response.ok) throw new Error('Ошибка API: проверьте ключ')
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Требуется авторизация. Войдите в аккаунт.')
+        }
+        throw new Error('Ошибка API: проверьте ключ или тариф')
+      }
 
       const data = await response.json()
       if (data.companies && Array.isArray(data.companies)) {
@@ -108,14 +122,21 @@ export function SearchScreen() {
     <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold">База компаний</h1>
-        <button onClick={() => setShowKeyInput(!showKeyInput)} className="text-tg-hint p-2">
-          <Key size={20} />
-        </button>
+        <div className="flex items-center space-x-2">
+          {!jwt && (
+            <button onClick={onNavigateToAuth} className="text-xs bg-brand/10 text-brand px-2 py-1 rounded-md font-medium flex items-center">
+              <LogIn size={12} className="mr-1" /> Войти
+            </button>
+          )}
+          <button onClick={() => setShowKeyInput(!showKeyInput)} className="text-tg-hint p-2">
+            <Key size={20} />
+          </button>
+        </div>
       </div>
 
       {showKeyInput && (
         <div className="bg-tg-secondary rounded-xl p-3 border border-gray-500/10 space-y-2">
-          <p className="text-xs text-tg-hint">API-ключ (Профиль → API-ключ)</p>
+          <p className="text-xs text-tg-hint">API-ключ (если нет аккаунта)</p>
           <input 
             type="password"
             value={apiKey}
