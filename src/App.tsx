@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      showToast('🔥 Новый лид в вашем регионе! Проверьте поиск.', 'success')
+      showToast('🔥 Новый лид в вашем регионе! Проверьте поиск.', 'success', 'system')
     }, 30000)
     return () => clearInterval(timer)
   }, [showToast])
@@ -65,6 +65,7 @@ function App() {
               onNavigateToSearch={() => setActiveTab('search')} 
               onNavigateToHistory={() => setShowHistory(true)}
               onNavigateToIncome={() => setShowIncome(true)}
+              onNavigateToNotifications={() => setShowNotifications(true)}
             />
           )}
           {activeTab === 'search' && <SearchScreen onNavigateToAuth={() => setShowAuth(true)} />}

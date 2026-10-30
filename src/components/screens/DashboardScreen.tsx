@@ -1,16 +1,23 @@
-import { useState } from 'react'
-import { ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock, Bell } from 'lucide-react'
 import { haptic } from '../../lib/tg'
+import { getUnreadCount } from '../ui/Toast'
 
 interface DashboardScreenProps {
   onNavigateToSearch: () => void
   onNavigateToHistory: () => void
   onNavigateToIncome: () => void
+  onNavigateToNotifications: () => void
 }
 
-export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory, onNavigateToIncome }: DashboardScreenProps) {
+export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory, onNavigateToIncome, onNavigateToNotifications }: DashboardScreenProps) {
   const [period, setPeriod] = useState<'week' | 'month' | 'all'>('month')
+  const [unread, setUnread] = useState(0)
   const firstName = 'Партнер'
+
+  useEffect(() => {
+    setUnread(getUnreadCount())
+  }, [])
 
   const chartData = period === 'week' 
     ? [20, 35, 30, 50, 45, 70, 85]
@@ -42,9 +49,17 @@ export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory, onNav
           <p className="text-tg-hint text-sm">С возвращением,</p>
           <h1 className="text-2xl font-bold">{firstName} 👋</h1>
         </div>
-        <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center border border-brand/20">
-          <span className="text-xl">👓</span>
-        </div>
+        <button 
+          onClick={() => { haptic('light'); onNavigateToNotifications(); }}
+          className="relative w-10 h-10 rounded-full bg-tg-secondary flex items-center justify-center border border-gray-500/10 active:scale-95 transition-transform"
+        >
+          <Bell size={20} className="text-tg-text" />
+          {unread > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white px-1">
+              {unread > 9 ? '9+' : unread}
+            </span>
+          )}
+        </button>
       </div>
 
       <button 

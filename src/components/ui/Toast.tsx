@@ -43,17 +43,28 @@ export function Toast({ message, type, onClose }: ToastProps) {
   )
 }
 
+export interface Notification {
+  id: number
+  message: string
+  type: 'success' | 'error' | 'info'
+  time: string
+  read: boolean
+  category: 'system' | 'task' | 'payment'
+}
+
 export function useToast() {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null)
 
-  const showToast = (message: string, type: ToastType = 'info') => {
+  const showToast = (message: string, type: ToastType = 'info', category: 'system' | 'task' | 'payment' = 'system') => {
     setToast({ message, type })
-    const history = JSON.parse(localStorage.getItem('trinity_notifications') || '[]')
+    const history: Notification[] = JSON.parse(localStorage.getItem('trinity_notifications') || '[]')
     history.unshift({
       id: Date.now(),
       message,
       type,
       time: new Date().toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+      read: false,
+      category,
     })
     localStorage.setItem('trinity_notifications', JSON.stringify(history.slice(0, 50)))
   }
@@ -63,4 +74,10 @@ export function useToast() {
   ) : null
 
   return { showToast, ToastComponent }
+}
+
+// Хелпер для подсчета непрочитанных
+export function getUnreadCount(): number {
+  const notifications: Notification[] = JSON.parse(localStorage.getItem('trinity_notifications') || '[]')
+  return notifications.filter(n => !n.read).length
 }
