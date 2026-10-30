@@ -5,9 +5,10 @@ import { haptic } from '../../lib/tg'
 
 interface ProfileScreenProps {
   onNavigateToTariffs: () => void
+  onNavigateToApiKey: () => void
 }
 
-export function ProfileScreen({ onNavigateToTariffs }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -91,7 +92,7 @@ export function ProfileScreen({ onNavigateToTariffs }: ProfileScreenProps) {
           </div>
         </div>
 
-        <button onClick={() => handleAction('API-ключ')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+        <button onClick={onNavigateToApiKey} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
               <Key size={18} className="text-purple-500" />

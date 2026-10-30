@@ -7,19 +7,24 @@ import { IntegrationsScreen } from './components/screens/IntegrationsScreen'
 import { ProfileScreen } from './components/screens/ProfileScreen'
 import { HistoryScreen } from './components/screens/HistoryScreen'
 import { TariffsScreen } from './components/screens/TariffsScreen'
+import { ApiKeyScreen } from './components/screens/ApiKeyScreen'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [showHistory, setShowHistory] = useState(false)
   const [showTariffs, setShowTariffs] = useState(false)
+  const [showApiKey, setShowApiKey] = useState(false)
 
-  // Если открыта история или тарифы, показываем их как полноэкранные модалки
   if (showHistory) {
     return <HistoryScreen onClose={() => setShowHistory(false)} />
   }
 
   if (showTariffs) {
     return <TariffsScreen onClose={() => setShowTariffs(false)} />
+  }
+
+  if (showApiKey) {
+    return <ApiKeyScreen onClose={() => setShowApiKey(false)} />
   }
 
   return (
@@ -33,7 +38,12 @@ function App() {
       {activeTab === 'search' && <SearchScreen />}
       {activeTab === 'achievements' && <AchievementsScreen />}
       {activeTab === 'integrations' && <IntegrationsScreen />}
-      {activeTab === 'profile' && <ProfileScreen onNavigateToTariffs={() => setShowTariffs(true)} />}
+      {activeTab === 'profile' && (
+        <ProfileScreen 
+          onNavigateToTariffs={() => setShowTariffs(true)} 
+          onNavigateToApiKey={() => setShowApiKey(true)}
+        />
+      )}
     </Layout>
   )
 }
