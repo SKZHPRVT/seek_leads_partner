@@ -1,4 +1,4 @@
-import { Award, Zap, TrendingUp, Sparkles, ChevronRight } from 'lucide-react'
+import { Award, TrendingUp, Sparkles, ChevronRight, Database, Bot, Link2 } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 
 interface DashboardScreenProps {
@@ -56,6 +56,31 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
           <span>Перейти к поиску</span>
           <ChevronRight size={18} className="text-tg-hint" />
         </button>
+      </div>
+
+      {/* Блок интеграций (из CRM.txt) */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-lg">Экосистема Тринити</h3>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 flex items-center space-x-3">
+            <Database className="text-blue-500" size={20} />
+            <span className="text-sm font-medium">Битрикс24</span>
+          </div>
+          <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 flex items-center space-x-3">
+            <Link2 className="text-purple-500" size={20} />
+            <span className="text-sm font-medium">amoCRM</span>
+          </div>
+          <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 flex items-center space-x-3">
+            <Bot className="text-yellow-500" size={20} />
+            <span className="text-sm font-medium">Алиса</span>
+          </div>
+          <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 flex items-center space-x-3">
+            <Sparkles className="text-green-500" size={20} />
+            <span className="text-sm font-medium">MCP / API</span>
+          </div>
+        </div>
       </div>
 
       {/* Ачивки */}
