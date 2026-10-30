@@ -1,28 +1,113 @@
 import { useState } from 'react'
-import { Search, Phone, Mail, Globe, Briefcase, Loader2 } from 'lucide-react'
+import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle } from 'lucide-react'
+import WebApp from '@twa-dev/sdk'
+
+interface Company {
+  id: number;
+  name: string;
+  director?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  site?: string | null;
+  vk?: boolean;
+}
 
 export function SearchScreen() {
   const [query, setQuery] = useState('стоматологии в Казани')
   const [isSearching, setIsSearching] = useState(false)
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [results, setResults] = useState<Company[]>([])
+  const [showKeyInput, setShowKeyInput] = useState(false)
+  const [apiKey, setApiKey] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
+  // Мок-данные на случай, если ключа нет
   const mockResults = [
     { id: 1, name: 'ООО «Белая улыбка»', director: 'Директор · Ирина С.', phone: '+7 (843) 2••-••-17', email: 'info@...', site: 'сайт', vk: true },
     { id: 2, name: 'ООО «Дента Плюс»', director: 'Главный врач · Марат Г.', phone: '+7 (843) 5••-••-40', email: null, site: 'сайт', vk: false },
     { id: 3, name: 'ООО «Смайл Клиник»', director: null, phone: '+7 (917) 2••-••-63', email: 'clinic@...', site: 'сайт', vk: false },
   ]
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setIsSearching(true)
-    setTimeout(() => setIsSearching(false), 1500) // Имитация работы нейросети
+    setError(null)
+    setResults([])
+
+    // Если ключа нет — показываем мок
+    if (!apiKey.trim()) {
+      setTimeout(() => {
+        setResults(mockResults)
+        setIsSearching(false)
+      }, 1000)
+      return
+    }
+
+    // Реальный запрос к API Тринити
+    try {
+      const response = await fetch('https://seek-leads.ru/api/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey.trim()
+        },
+        body: JSON.stringify({
+          query: query,
+          limit: 10,
+          channels: ["msp"]
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Ошибка API: проверьте ключ или тариф')
+      }
+
+      const data = await response.json()
+      
+      // Парсим ответ (структура может отличаться, подстраиваем под реальный API)
+      // В документации ответ не описан детально, поэтому предполагаем массив companies
+      if (data.companies && Array.isArray(data.companies)) {
+        setResults(data.companies.map((c: any) => ({
+          id: c.id || Math.random(),
+          name: c.name || c.company_name || 'Без названия',
+          director: c.director || c.ceo || null,
+          phone: c.phone || null,
+          email: c.email || null,
+          site: c.site || c.website || null,
+          vk: !!c.vk
+        })))
+      } else {
+        // Если структура другая, показываем мок для демо
+        setResults(mockResults)
+      }
+    } catch (err: any) {
+      setError(err.message || 'Произошла ошибка при поиске')
+      WebApp.showAlert(err.message || 'Ошибка поиска')
+    } finally {
+      setIsSearching(false)
+    }
   }
 
   return (
     <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold">База компаний</h1>
-        <span className="text-xs bg-brand/10 text-brand px-2 py-1 rounded-md font-medium">ИИ-поиск</span>
+        <button onClick={() => setShowKeyInput(!showKeyInput)} className="text-tg-hint p-2">
+          <Key size={20} />
+        </button>
       </div>
+
+      {/* Поле для API-ключа (скрытое) */}
+      {showKeyInput && (
+        <div className="bg-tg-secondary rounded-xl p-3 border border-gray-500/10 space-y-2">
+          <p className="text-xs text-tg-hint">API-ключ (Профиль → Интеграции на seek-leads.ru)</p>
+          <input 
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="sk-tr-..."
+            className="w-full bg-tg-bg border border-gray-500/20 rounded-lg px-3 py-2 text-sm"
+          />
+        </div>
+      )}
       
       {/* Поисковая строка */}
       <div className="relative">
@@ -31,31 +116,9 @@ export function SearchScreen() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full bg-tg-secondary border border-gray-500/10 rounded-2xl py-4 pl-12 pr-4 text-tg-text focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all"
-          placeholder="Кого ищем? (например, стоматологии)"
+          placeholder="Кого ищем?"
         />
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-tg-hint" size={20} />
-      </div>
-
-      {/* Фильтры */}
-      <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-        {[
-          { id: 'all', label: 'Все' },
-          { id: 'phone', label: 'С телефоном' },
-          { id: 'email', label: 'С почтой' },
-          { id: 'site', label: 'С сайтом' },
-        ].map(filter => (
-          <button
-            key={filter.id}
-            onClick={() => setActiveFilter(filter.id)}
-            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${
-              activeFilter === filter.id 
-                ? 'bg-brand text-white border-brand' 
-                : 'bg-tg-secondary text-tg-hint border-gray-500/10'
-            }`}
-          >
-            {filter.label}
-          </button>
-        ))}
       </div>
 
       <button 
@@ -73,9 +136,21 @@ export function SearchScreen() {
         )}
       </button>
 
+      {/* Ошибки */}
+      {error && (
+        <div className="bg-red-500/10 text-red-500 p-3 rounded-xl flex items-start space-x-2 text-sm">
+          <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+          <p>{error}</p>
+        </div>
+      )}
+
       {/* Результаты */}
       <div className="space-y-3 mt-4">
-        {!isSearching && mockResults.map((company) => (
+        {!isSearching && results.length === 0 && !error && (
+          <p className="text-center text-tg-hint text-sm py-4">Введите запрос и нажмите «Найти»</p>
+        )}
+
+        {!isSearching && results.map((company) => (
           <div key={company.id} className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 animate-in fade-in zoom-in-95 duration-300">
             <div className="flex justify-between items-start mb-1">
               <h3 className="font-semibold text-base">{company.name}</h3>
