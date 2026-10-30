@@ -97,21 +97,32 @@ export function AchievementsScreen() {
         })}
       </div>
 
-      {/* Модалка с деталями ачивки */}
+      {/* Модалка с деталями ачивки (полноэкранная) */}
       {selected && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm animate-in fade-in" onClick={() => setSelected(null)}>
-          <div className="bg-tg-bg w-full rounded-t-3xl p-6 animate-in slide-in-from-bottom duration-300" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl ${selected.progress >= selected.max ? 'bg-brand/20' : 'bg-gray-500/10 grayscale'}`}>
-                {selected.icon}
-              </div>
-              <button onClick={() => setSelected(null)} className="p-2 bg-tg-secondary rounded-full">
-                <X size={18} />
-              </button>
+        <div className="fixed inset-0 z-[100] bg-tg-bg animate-in slide-in-from-bottom duration-300 flex flex-col">
+          {/* Шапка модалки с учетом safe-area */}
+          <div 
+            className="flex items-center justify-between p-4 border-b border-gray-500/10 bg-tg-bg"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
+          >
+            <h2 className="text-lg font-bold">Детали ачивки</h2>
+            <button onClick={() => setSelected(null)} className="p-2 bg-tg-secondary rounded-full">
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Контент модалки (скроллится) */}
+          <div className="flex-1 overflow-y-auto p-6 pb-24">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 ${selected.progress >= selected.max ? 'bg-brand/20' : 'bg-gray-500/10 grayscale'}`}>
+              {selected.icon}
             </div>
-            <h2 className="text-2xl font-bold mb-1">{selected.title}</h2>
-            <span className="inline-block text-xs bg-brand/10 text-brand px-2 py-1 rounded-md font-medium mb-3">{selected.category}</span>
-            <p className="text-sm text-tg-hint mb-6">{selected.desc}</p>
+            
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-1">{selected.title}</h2>
+              <span className="inline-block text-xs bg-brand/10 text-brand px-2 py-1 rounded-md font-medium">{selected.category}</span>
+            </div>
+
+            <p className="text-sm text-tg-hint text-center mb-8">{selected.desc}</p>
             
             <div className="bg-tg-secondary rounded-xl p-4 mb-4">
               <div className="flex justify-between text-sm mb-2">
@@ -135,7 +146,7 @@ export function AchievementsScreen() {
             </div>
 
             {selected.date && (
-              <p className="text-xs text-center text-tg-hint mt-4">Получено {selected.date}</p>
+              <p className="text-xs text-center text-tg-hint mt-6">Получено {selected.date}</p>
             )}
           </div>
         </div>
