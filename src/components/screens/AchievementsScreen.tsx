@@ -1,14 +1,34 @@
-import { Trophy, Lock, CheckCircle2 } from 'lucide-react'
+import { useState } from 'react'
+import { Trophy, Lock, CheckCircle2, X, Calendar, Target } from 'lucide-react'
+import { haptic } from '../../lib/tg'
+
+interface Achievement {
+  id: number
+  title: string
+  desc: string
+  progress: number
+  max: number
+  reward: string
+  icon: string
+  date?: string
+  category: string
+}
 
 export function AchievementsScreen() {
-  const achievements = [
-    { id: 1, title: 'Первый шаг', desc: 'Взять первый лид в работу', progress: 1, max: 1, reward: '+100 ₽', icon: '🚀' },
-    { id: 2, title: 'Мастер поиска', desc: 'Найти 10 компаний', progress: 10, max: 10, reward: '+200 ₽', icon: '🔍' },
-    { id: 3, title: 'Коммуникатор', desc: 'Привести 5 друзей', progress: 3, max: 5, reward: '+500 ₽', icon: '🤝' },
-    { id: 4, title: 'Интегратор', desc: 'Подключить amoCRM или Б24', progress: 0, max: 1, reward: '+300 ₽', icon: '⚙️' },
-    { id: 5, title: 'Голосовой ввод', desc: 'Использовать Алису 3 раза', progress: 1, max: 3, reward: '+150 ₽', icon: '🎤' },
-    { id: 6, title: 'Профи', desc: 'Заработать 10 000 ₽', progress: 3400, max: 10000, reward: 'Статус PRO', icon: '👑' },
+  const [selected, setSelected] = useState<Achievement | null>(null)
+
+  const achievements: Achievement[] = [
+    { id: 1, title: 'Первый шаг', desc: 'Взять первый лид в работу. Это открывает путь к первым выплатам.', progress: 1, max: 1, reward: '+100 ₽', icon: '🚀', date: '25.10.2026', category: 'Начало' },
+    { id: 2, title: 'Мастер поиска', desc: 'Найти 10 компаний через ИИ-поиск. Ты учишься пользоваться главным инструментом.', progress: 10, max: 10, reward: '+200 ₽', icon: '🔍', date: '27.10.2026', category: 'Поиск' },
+    { id: 3, title: 'Коммуникатор', desc: 'Привести 5 друзей в Тринити. Помоги им заработать — и получишь бонус.', progress: 3, max: 5, reward: '+500 ₽', icon: '🤝', category: 'Партнерка' },
+    { id: 4, title: 'Интегратор', desc: 'Подключить amoCRM или Битрикс24. Автоматизируй работу с лидами.', progress: 0, max: 1, reward: '+300 ₽', icon: '⚙️', category: 'Интеграции' },
+    { id: 5, title: 'Голосовой ввод', desc: 'Использовать Алису 3 раза для поиска. Голосом — быстрее.', progress: 1, max: 3, reward: '+150 ₽', icon: '🎤', category: 'Инновации' },
+    { id: 6, title: 'Профи', desc: 'Заработать 10 000 ₽. Серьезная заявка на успех.', progress: 3400, max: 10000, reward: 'Статус PRO', icon: '👑', category: 'Достижения' },
+    { id: 7, title: 'Ночной охотник', desc: 'Сделать поиск после 22:00. Мы знаем, ты работаешь даже ночью.', progress: 0, max: 1, reward: '+50 ₽', icon: '🌙', category: 'Особые' },
+    { id: 8, title: 'Эксперт', desc: 'Написать пост о Тринити в соцсетях. Расскажи миру о нас.', progress: 0, max: 1, reward: '+200 ₽', icon: '✍️', category: 'Контент' },
   ]
+
+  const categories = ['Начало', 'Поиск', 'Партнерка', 'Интеграции', 'Инновации', 'Достижения', 'Особые', 'Контент']
 
   return (
     <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
@@ -16,61 +36,112 @@ export function AchievementsScreen() {
         <h1 className="text-2xl font-bold">Ачивки</h1>
         <div className="flex items-center text-brand bg-brand/10 px-3 py-1.5 rounded-full">
           <Trophy size={16} className="mr-1.5" />
-          <span className="text-sm font-semibold">3 / 6</span>
+          <span className="text-sm font-semibold">2 / 8</span>
         </div>
       </div>
 
-      <div className="space-y-3">
+      {/* Календарь ачивок (мини) */}
+      <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <Calendar size={16} className="text-brand" />
+            <span className="text-sm font-medium">Октябрь 2026</span>
+          </div>
+          <span className="text-xs text-tg-hint">2 / 8</span>
+        </div>
+        <div className="flex space-x-2 overflow-x-auto pb-1">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div key={i} className={`min-w-[40px] h-12 rounded-lg flex flex-col items-center justify-center text-xs ${i === 4 || i === 6 ? 'bg-brand/20 text-brand' : 'bg-tg-bg text-tg-hint'}`}>
+              <span className="font-bold text-sm">{24 + i}</span>
+              <span className="text-[9px]">{i === 4 ? '🚀' : i === 6 ? '🔍' : '·'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Сетка ачивок */}
+      <div className="grid grid-cols-2 gap-3">
         {achievements.map((ach) => {
           const isCompleted = ach.progress >= ach.max
           const percent = Math.min((ach.progress / ach.max) * 100, 100)
 
           return (
-            <div 
-              key={ach.id} 
-              className={`rounded-2xl p-4 border transition-all ${
+            <button
+              key={ach.id}
+              onClick={() => { haptic('light'); setSelected(ach); }}
+              className={`rounded-2xl p-4 border text-left transition-all active:scale-[0.98] ${
                 isCompleted 
                   ? 'bg-gradient-to-br from-brand/5 to-brand/10 border-brand/20' 
                   : 'bg-tg-secondary border-gray-500/10'
               }`}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${isCompleted ? 'bg-brand/20' : 'bg-gray-500/10 grayscale'}`}>
-                    {ach.icon}
-                  </div>
-                  <div>
-                    <h3 className={`font-semibold ${isCompleted ? 'text-brand' : 'text-tg-text'}`}>{ach.title}</h3>
-                    <p className="text-xs text-tg-hint mt-0.5">{ach.desc}</p>
-                  </div>
+              <div className="flex items-start justify-between mb-2">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${isCompleted ? 'bg-brand/20' : 'bg-gray-500/10 grayscale'}`}>
+                  {ach.icon}
                 </div>
                 {isCompleted ? (
-                  <CheckCircle2 size={20} className="text-brand flex-shrink-0" />
+                  <CheckCircle2 size={16} className="text-brand" />
                 ) : (
-                  <Lock size={18} className="text-tg-hint flex-shrink-0" />
+                  <Lock size={14} className="text-tg-hint" />
                 )}
               </div>
-              
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-medium">
-                  <span className="text-tg-hint">
-                    {ach.progress} / {ach.max}
-                  </span>
-                  <span className={isCompleted ? 'text-brand' : 'text-tg-hint'}>
-                    {isCompleted ? 'Получено' : `Награда: ${ach.reward}`}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-500/20 h-2 rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full rounded-full transition-all duration-1000 ${isCompleted ? 'bg-brand' : 'bg-brand/50'}`}
-                    style={{ width: `${percent}%` }}
-                  ></div>
-                </div>
+              <h3 className={`font-semibold text-sm mb-1 ${isCompleted ? 'text-brand' : 'text-tg-text'}`}>{ach.title}</h3>
+              <p className="text-[10px] text-tg-hint mb-2 line-clamp-1">{ach.category}</p>
+              <div className="w-full bg-gray-500/20 h-1.5 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full rounded-full ${isCompleted ? 'bg-brand' : 'bg-brand/50'}`}
+                  style={{ width: `${percent}%` }}
+                ></div>
               </div>
-            </div>
+              <p className="text-[10px] text-tg-hint mt-1.5">{ach.progress} / {ach.max}</p>
+            </button>
           )
         })}
       </div>
+
+      {/* Модалка с деталями ачивки */}
+      {selected && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm animate-in fade-in" onClick={() => setSelected(null)}>
+          <div className="bg-tg-bg w-full rounded-t-3xl p-6 animate-in slide-in-from-bottom duration-300" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-4">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl ${selected.progress >= selected.max ? 'bg-brand/20' : 'bg-gray-500/10 grayscale'}`}>
+                {selected.icon}
+              </div>
+              <button onClick={() => setSelected(null)} className="p-2 bg-tg-secondary rounded-full">
+                <X size={18} />
+              </button>
+            </div>
+            <h2 className="text-2xl font-bold mb-1">{selected.title}</h2>
+            <span className="inline-block text-xs bg-brand/10 text-brand px-2 py-1 rounded-md font-medium mb-3">{selected.category}</span>
+            <p className="text-sm text-tg-hint mb-6">{selected.desc}</p>
+            
+            <div className="bg-tg-secondary rounded-xl p-4 mb-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-tg-hint">Прогресс</span>
+                <span className="font-medium">{selected.progress} / {selected.max}</span>
+              </div>
+              <div className="w-full bg-gray-500/20 h-2 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-brand rounded-full transition-all duration-1000" 
+                  style={{ width: `${Math.min((selected.progress / selected.max) * 100, 100)}%` }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-brand/5 rounded-xl border border-brand/10">
+              <div className="flex items-center text-brand">
+                <Target size={20} className="mr-2" />
+                <span className="font-semibold">Награда</span>
+              </div>
+              <span className="font-bold text-brand">{selected.reward}</span>
+            </div>
+
+            {selected.date && (
+              <p className="text-xs text-center text-tg-hint mt-4">Получено {selected.date}</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
