@@ -1,4 +1,4 @@
-import { TrendingUp, ChevronRight, Zap, ArrowUpRight } from 'lucide-react'
+import { ChevronRight, Zap, ArrowUpRight } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 
 interface DashboardScreenProps {
@@ -9,11 +9,9 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const firstName = user?.first_name || 'Партнер'
 
-  // Данные для графика (имитация)
   const chartData = [10, 25, 20, 40, 35, 60, 85, 70, 95]
   const maxVal = Math.max(...chartData)
   
-  // Генерируем SVG path для графика
   const generatePath = () => {
     const width = 300
     const height = 80
@@ -29,7 +27,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
 
   return (
     <div className="p-4 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24">
-      {/* Шапка */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-tg-hint text-sm">С возвращением,</p>
@@ -40,7 +37,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Карточка баланса с графиком */}
       <div className="bg-gradient-to-br from-brand to-brand-dark rounded-3xl p-5 text-white shadow-xl shadow-brand/20 relative overflow-hidden">
         <div className="flex justify-between items-start mb-2">
           <div>
@@ -53,7 +49,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
           </div>
         </div>
 
-        {/* SVG График */}
         <div className="h-20 w-full mt-4 relative">
           <svg viewBox="0 0 300 80" className="w-full h-full overflow-visible" preserveAspectRatio="none">
             <defs>
@@ -62,20 +57,8 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
                 <stop offset="100%" stopColor="rgba(255,255,255,0)" />
               </linearGradient>
             </defs>
-            {/* Заливка под графиком */}
-            <path 
-              d={`${generatePath()} L 300 80 L 0 80 Z`} 
-              fill="url(#chartGradient)" 
-            />
-            {/* Линия графика */}
-            <path 
-              d={generatePath()} 
-              fill="none" 
-              stroke="white" 
-              strokeWidth="3" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-            />
+            <path d={`${generatePath()} L 300 80 L 0 80 Z`} fill="url(#chartGradient)" />
+            <path d={generatePath()} fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
 
@@ -89,7 +72,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Умная кнопка-промпт */}
       <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10">
         <div className="flex items-center space-x-2 text-brand mb-2">
           <Zap size={18} />
@@ -104,7 +86,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </button>
       </div>
 
-      {/* Последние действия */}
       <div>
         <h3 className="font-semibold text-lg mb-3">Последние действия</h3>
         <div className="bg-tg-secondary rounded-2xl border border-gray-500/10 overflow-hidden">
