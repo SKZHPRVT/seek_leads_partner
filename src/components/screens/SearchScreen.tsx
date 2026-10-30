@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, MapPin, Phone, Mail, Globe, Briefcase } from 'lucide-react'
+import { Search, Phone, Mail, Globe, Briefcase } from 'lucide-react'
 
 export function SearchScreen() {
   const [query, setQuery] = useState('стоматологии в Казани')
