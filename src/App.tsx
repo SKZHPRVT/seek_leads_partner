@@ -12,6 +12,8 @@ import { TasksScreen } from './components/screens/TasksScreen'
 import { NetworkScreen } from './components/screens/NetworkScreen'
 import { AchievementsScreen } from './components/screens/AchievementsScreen'
 import { AuthScreen } from './components/screens/AuthScreen'
+import { PaymentsScreen } from './components/screens/PaymentsScreen'
+import { SecurityScreen } from './components/screens/SecurityScreen'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
@@ -22,6 +24,8 @@ function App() {
   const [showNetwork, setShowNetwork] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
+  const [showPayments, setShowPayments] = useState(false)
+  const [showSecurity, setShowSecurity] = useState(false)
 
   if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
   if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
@@ -30,6 +34,8 @@ function App() {
   if (showNetwork) return <NetworkScreen onClose={() => setShowNetwork(false)} />
   if (showAchievements) return <AchievementsScreen onClose={() => setShowAchievements(false)} />
   if (showAuth) return <AuthScreen onClose={() => setShowAuth(false)} onAuthSuccess={() => setShowAuth(false)} />
+  if (showPayments) return <PaymentsScreen onClose={() => setShowPayments(false)} />
+  if (showSecurity) return <SecurityScreen onClose={() => setShowSecurity(false)} />
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -49,6 +55,8 @@ function App() {
           onNavigateToSettings={() => setShowSettings(true)}
           onNavigateToNetwork={() => setShowNetwork(true)}
           onNavigateToAchievements={() => setShowAchievements(true)}
+          onNavigateToPayments={() => setShowPayments(true)}
+          onNavigateToSecurity={() => setShowSecurity(true)}
         />
       )}
     </Layout>

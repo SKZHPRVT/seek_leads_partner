@@ -9,9 +9,11 @@ interface ProfileScreenProps {
   onNavigateToSettings: () => void
   onNavigateToNetwork: () => void
   onNavigateToAchievements: () => void
+  onNavigateToPayments: () => void
+  onNavigateToSecurity: () => void
 }
 
-export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings, onNavigateToNetwork, onNavigateToAchievements }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings, onNavigateToNetwork, onNavigateToAchievements, onNavigateToPayments, onNavigateToSecurity }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -26,11 +28,6 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
   const handleShare = () => {
     haptic('light')
     WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Попробуй Тринити — ИИ для поиска контактов!`)
-  }
-
-  const handleAction = (action: string) => {
-    haptic('light')
-    WebApp.showAlert(`Раздел "${action}" в разработке`)
   }
 
   return (
@@ -139,7 +136,7 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
           <ChevronRight size={18} className="text-tg-hint" />
         </button>
 
-        <button onClick={() => handleAction('Интеграции')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+        <button onClick={onNavigateToSettings} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
               <Link2 size={18} className="text-blue-500" />
@@ -154,13 +151,13 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
       </div>
 
       <div className="bg-tg-secondary rounded-2xl border border-gray-500/10 overflow-hidden">
-        <button onClick={() => handleAction('Платежи')} className="w-full p-4 flex items-center justify-between border-b border-gray-500/10 active:bg-gray-500/5">
+        <button onClick={onNavigateToPayments} className="w-full p-4 flex items-center justify-between border-b border-gray-500/10 active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <CreditCard size={20} className="text-tg-hint" />
             <span className="font-medium">История платежей</span>
           </div>
         </button>
-        <button onClick={() => handleAction('Безопасность')} className="w-full p-4 flex items-center justify-between border-b border-gray-500/10 active:bg-gray-500/5">
+        <button onClick={onNavigateToSecurity} className="w-full p-4 flex items-center justify-between border-b border-gray-500/10 active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <Shield size={20} className="text-tg-hint" />
             <span className="font-medium">Безопасность</span>
