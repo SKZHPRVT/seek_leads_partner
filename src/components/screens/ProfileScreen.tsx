@@ -1,10 +1,27 @@
-import { CheckCircle2, User, CreditCard, Shield, LogOut } from 'lucide-react'
+import { useState } from 'react'
+import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
+import { haptic } from '../../lib/tg'
 
 export function ProfileScreen() {
   const user = WebApp.initDataUnsafe?.user
+  const [copied, setCopied] = useState(false)
+  const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(refLink)
+    haptic('success')
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleShare = () => {
+    haptic('light')
+    WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Попробуй Тринити — ИИ для поиска контактов!`)
+  }
 
   const handleAction = (action: string) => {
+    haptic('light')
     WebApp.showAlert(`Раздел "${action}" в разработке`)
   }
 
@@ -48,6 +65,58 @@ export function ProfileScreen() {
           className="w-full bg-white text-gray-900 font-semibold py-3 rounded-xl active:scale-[0.98] transition-transform"
         >
           Сменить тариф
+        </button>
+      </div>
+
+      {/* Мои инструменты */}
+      <div>
+        <h3 className="font-semibold text-lg mb-3">Мои инструменты</h3>
+        
+        {/* Реферальная ссылка */}
+        <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium flex items-center"><Share2 size={14} className="mr-2 text-brand" /> Реферальная ссылка</span>
+            {copied && <span className="text-xs text-green-500">Скопировано!</span>}
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex-1 bg-tg-bg rounded-xl px-3 py-2 text-xs text-tg-hint overflow-hidden text-ellipsis whitespace-nowrap border border-gray-500/10">
+              {refLink}
+            </div>
+            <button onClick={handleCopy} className="p-2.5 bg-brand/10 text-brand rounded-xl active:bg-brand/20">
+              <Copy size={16} />
+            </button>
+            <button onClick={handleShare} className="p-2.5 bg-brand/10 text-brand rounded-xl active:bg-brand/20">
+              <Share2 size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* API Ключ */}
+        <button onClick={() => handleAction('API-ключ')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
+              <Key size={18} className="text-purple-500" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-sm">API-ключ</p>
+              <p className="text-xs text-tg-hint">Для интеграций и скриптов</p>
+            </div>
+          </div>
+          <ChevronRight size={18} className="text-tg-hint" />
+        </button>
+
+        {/* Интеграции (переход на вкладку) */}
+        <button onClick={() => handleAction('Интеграции')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
+              <Link2 size={18} className="text-blue-500" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-sm">Интеграции</p>
+              <p className="text-xs text-tg-hint">CRM, Алиса, MCP</p>
+            </div>
+          </div>
+          <ChevronRight size={18} className="text-tg-hint" />
         </button>
       </div>
 

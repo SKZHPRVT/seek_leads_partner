@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trophy, Lock, CheckCircle2, X, Calendar, Target } from 'lucide-react'
+import { Trophy, Lock, CheckCircle2, X, Target } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
 interface Achievement {
@@ -35,25 +35,6 @@ export function AchievementsScreen() {
         <div className="flex items-center text-brand bg-brand/10 px-3 py-1.5 rounded-full">
           <Trophy size={16} className="mr-1.5" />
           <span className="text-sm font-semibold">2 / 8</span>
-        </div>
-      </div>
-
-      {/* Календарь ачивок */}
-      <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <Calendar size={16} className="text-brand" />
-            <span className="text-sm font-medium">Октябрь 2026</span>
-          </div>
-          <span className="text-xs text-tg-hint">2 / 8</span>
-        </div>
-        <div className="flex space-x-2 overflow-x-auto pb-1">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} className={`min-w-[40px] h-12 rounded-lg flex flex-col items-center justify-center text-xs ${i === 4 || i === 6 ? 'bg-brand/20 text-brand' : 'bg-tg-bg text-tg-hint'}`}>
-              <span className="font-bold text-sm">{24 + i}</span>
-              <span className="text-[9px]">{i === 4 ? '🚀' : i === 6 ? '🔍' : '·'}</span>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -97,7 +78,7 @@ export function AchievementsScreen() {
         })}
       </div>
 
-      {/* Модалка-шторка (как раньше, но без белых отступов и с отступом снизу) */}
+      {/* Модалка-шторка */}
       {selected && (
         <div 
           className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm animate-in fade-in" 

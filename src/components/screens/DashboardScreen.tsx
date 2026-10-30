@@ -45,16 +45,7 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      <button 
-        onClick={onNavigateToSearch}
-        className="w-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold py-5 rounded-2xl shadow-xl shadow-brand/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 relative overflow-hidden group"
-      >
-        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-        <Zap size={24} className="animate-pulse" />
-        <span className="text-lg">Найти новые лиды</span>
-        <ChevronRight size={20} />
-      </button>
-
+      {/* Блок с доходом */}
       <div className="bg-gradient-to-br from-brand to-brand-dark rounded-3xl p-5 text-white shadow-xl shadow-brand/20 relative overflow-hidden">
         <div className="flex justify-between items-start mb-3 relative z-10">
           <div>
@@ -99,6 +90,18 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
+      {/* ГЛАВНАЯ КНОПКА (теперь под доходом) */}
+      <button 
+        onClick={onNavigateToSearch}
+        className="w-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold py-5 rounded-2xl shadow-xl shadow-brand/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 relative overflow-hidden group"
+      >
+        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <Zap size={24} className="animate-pulse" />
+        <span className="text-lg">Найти новые лиды</span>
+        <ChevronRight size={20} />
+      </button>
+
+      {/* Блок "Моя статистика" */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg flex items-center"><BarChart3 size={18} className="mr-2 text-brand" />Моя статистика</h3>
@@ -135,6 +138,7 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
+      {/* Последние действия */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg">Последние действия</h3>
