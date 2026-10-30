@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Briefcase, MapPin, DollarSign, Clock, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { Briefcase, MapPin, Clock, CheckCircle2 } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
@@ -26,7 +26,6 @@ export function TasksScreen() {
     haptic('success')
     setTasks(tasks.map(t => t.id === taskId ? { ...t, status: 'in_progress' } : t))
     
-    // Добавляем в историю
     const history = JSON.parse(localStorage.getItem('trinity_history') || '[]')
     history.unshift({
       id: Date.now(),

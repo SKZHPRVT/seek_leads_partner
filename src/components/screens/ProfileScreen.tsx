@@ -28,6 +28,11 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
     WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Попробуй Тринити — ИИ для поиска контактов!`)
   }
 
+  const handleAction = (action: string) => {
+    haptic('light')
+    WebApp.showAlert(`Раздел "${action}" в разработке`)
+  }
+
   return (
     <div className="p-4 space-y-6 animate-in fade-in duration-300 pb-24">
       <div className="flex items-center justify-between">
