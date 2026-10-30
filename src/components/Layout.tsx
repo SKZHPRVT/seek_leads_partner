@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useRef, useEffect } from 'react'
 import { LayoutDashboard, Search, Briefcase, Link2, User } from 'lucide-react'
 import clsx from 'clsx'
 import { haptic } from '../lib/tg'
@@ -12,6 +12,15 @@ interface LayoutProps {
 }
 
 export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
+  const mainRef = useRef<HTMLElement>(null)
+
+  // Сбрасываем скролл при смене вкладки
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0
+    }
+  }, [activeTab])
+
   const tabs = [
     { id: 'dashboard', label: 'Главная', icon: LayoutDashboard },
     { id: 'search', label: 'Поиск', icon: Search },
@@ -28,6 +37,7 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   return (
     <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden text-tg-text">
       <main 
+        ref={mainRef}
         className="flex-1 overflow-y-auto" 
         style={{ 
           paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)',

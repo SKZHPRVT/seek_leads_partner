@@ -43,7 +43,10 @@ export function TariffsScreen({ onClose }: TariffsScreenProps) {
   }
 
   return (
-    <div className="p-4 space-y-4 animate-in slide-in-from-bottom duration-300 pb-24 min-h-screen bg-tg-bg">
+    <div 
+      className="p-4 space-y-4 animate-in slide-in-from-bottom duration-300 pb-24 min-h-screen bg-tg-bg"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)' }}
+    >
       <div className="flex items-center space-x-3 mb-4">
         <button onClick={() => { haptic('light'); onClose(); }} className="p-2 bg-tg-secondary rounded-full">
           <ArrowLeft size={20} />
