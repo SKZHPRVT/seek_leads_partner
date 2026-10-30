@@ -4,9 +4,10 @@ import { haptic } from '../../lib/tg'
 
 interface DashboardScreenProps {
   onNavigateToSearch: () => void
+  onNavigateToHistory: () => void
 }
 
-export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
+export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory }: DashboardScreenProps) {
   const [period, setPeriod] = useState<'week' | 'month' | 'all'>('month')
   const firstName = 'Партнер'
 
@@ -45,7 +46,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Блок с доходом */}
       <div className="bg-gradient-to-br from-brand to-brand-dark rounded-3xl p-5 text-white shadow-xl shadow-brand/20 relative overflow-hidden">
         <div className="flex justify-between items-start mb-3 relative z-10">
           <div>
@@ -90,7 +90,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* ГЛАВНАЯ КНОПКА (теперь под доходом) */}
       <button 
         onClick={onNavigateToSearch}
         className="w-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold py-5 rounded-2xl shadow-xl shadow-brand/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 relative overflow-hidden group"
@@ -101,7 +100,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         <ChevronRight size={20} />
       </button>
 
-      {/* Блок "Моя статистика" */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg flex items-center"><BarChart3 size={18} className="mr-2 text-brand" />Моя статистика</h3>
@@ -138,11 +136,10 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Последние действия */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg">Последние действия</h3>
-          <button className="text-sm text-brand font-medium">Вся история</button>
+          <button onClick={onNavigateToHistory} className="text-sm text-brand font-medium">Вся история</button>
         </div>
         <div className="bg-tg-secondary rounded-2xl border border-gray-500/10 overflow-hidden">
           {[

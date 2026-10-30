@@ -3,7 +3,11 @@ import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
-export function ProfileScreen() {
+interface ProfileScreenProps {
+  onNavigateToTariffs: () => void
+}
+
+export function ProfileScreen({ onNavigateToTariffs }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -27,7 +31,6 @@ export function ProfileScreen() {
 
   return (
     <div className="p-4 space-y-6 animate-in fade-in duration-300 pb-24">
-      {/* Профиль */}
       <div className="flex items-center space-x-4">
         <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center border border-brand/20">
           {user?.photo_url ? (
@@ -42,7 +45,6 @@ export function ProfileScreen() {
         </div>
       </div>
 
-      {/* Текущий тариф */}
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden border border-gray-700">
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Shield size={80} />
@@ -61,18 +63,16 @@ export function ProfileScreen() {
           </div>
         </div>
         <button 
-          onClick={() => handleAction('Смена тарифа')}
+          onClick={onNavigateToTariffs}
           className="w-full bg-white text-gray-900 font-semibold py-3 rounded-xl active:scale-[0.98] transition-transform"
         >
           Сменить тариф
         </button>
       </div>
 
-      {/* Мои инструменты */}
       <div>
         <h3 className="font-semibold text-lg mb-3">Мои инструменты</h3>
         
-        {/* Реферальная ссылка */}
         <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium flex items-center"><Share2 size={14} className="mr-2 text-brand" /> Реферальная ссылка</span>
@@ -91,7 +91,6 @@ export function ProfileScreen() {
           </div>
         </div>
 
-        {/* API Ключ */}
         <button onClick={() => handleAction('API-ключ')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
@@ -105,7 +104,6 @@ export function ProfileScreen() {
           <ChevronRight size={18} className="text-tg-hint" />
         </button>
 
-        {/* Интеграции (переход на вкладку) */}
         <button onClick={() => handleAction('Интеграции')} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
@@ -120,7 +118,6 @@ export function ProfileScreen() {
         </button>
       </div>
 
-      {/* Меню настроек */}
       <div className="bg-tg-secondary rounded-2xl border border-gray-500/10 overflow-hidden">
         <button onClick={() => handleAction('Платежи')} className="w-full p-4 flex items-center justify-between border-b border-gray-500/10 active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
