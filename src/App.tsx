@@ -57,6 +57,7 @@ function App() {
           onNavigateToAchievements={() => setShowAchievements(true)}
           onNavigateToPayments={() => setShowPayments(true)}
           onNavigateToSecurity={() => setShowSecurity(true)}
+          onNavigateToIntegrations={() => setActiveTab('integrations')}
         />
       )}
     </Layout>

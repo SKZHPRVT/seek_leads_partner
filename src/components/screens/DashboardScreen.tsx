@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock } from 'lucide-react'
+import { ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock, Download } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
 interface DashboardScreenProps {
@@ -33,6 +33,21 @@ export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory }: Das
   }
 
   const totalIncome = period === 'week' ? '4 200' : period === 'month' ? '14 250' : '86 400'
+
+  const handleExport = () => {
+    haptic('success')
+    const history = JSON.parse(localStorage.getItem('trinity_history') || '[]')
+    const csvRows = [['Дата', 'Описание', 'Сумма']]
+    history.forEach((h: any) => {
+      csvRows.push([h.time, h.title, h.amount])
+    })
+    const csvContent = csvRows.map(r => r.join(';')).join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `trinity_income_${period}.csv`
+    link.click()
+  }
 
   return (
     <div className="p-4 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24">
@@ -88,6 +103,14 @@ export function DashboardScreen({ onNavigateToSearch, onNavigateToHistory }: Das
             <path d={generatePath()} fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
+
+        <button 
+          onClick={handleExport}
+          className="w-full mt-3 bg-white/20 backdrop-blur-sm text-white font-medium py-2 rounded-lg text-xs flex items-center justify-center space-x-2 active:bg-white/30 transition-colors"
+        >
+          <Download size={14} />
+          <span>Экспорт доходов (CSV)</span>
+        </button>
       </div>
 
       <button 

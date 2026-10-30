@@ -11,9 +11,19 @@ interface ProfileScreenProps {
   onNavigateToAchievements: () => void
   onNavigateToPayments: () => void
   onNavigateToSecurity: () => void
+  onNavigateToIntegrations: () => void
 }
 
-export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings, onNavigateToNetwork, onNavigateToAchievements, onNavigateToPayments, onNavigateToSecurity }: ProfileScreenProps) {
+export function ProfileScreen({ 
+  onNavigateToTariffs, 
+  onNavigateToApiKey, 
+  onNavigateToSettings, 
+  onNavigateToNetwork, 
+  onNavigateToAchievements, 
+  onNavigateToPayments, 
+  onNavigateToSecurity,
+  onNavigateToIntegrations 
+}: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -136,7 +146,7 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
           <ChevronRight size={18} className="text-tg-hint" />
         </button>
 
-        <button onClick={onNavigateToSettings} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+        <button onClick={onNavigateToIntegrations} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
               <Link2 size={18} className="text-blue-500" />
