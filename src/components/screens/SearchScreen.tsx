@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2, LogIn } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
@@ -23,9 +23,15 @@ export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
   const [results, setResults] = useState<Company[]>([])
   const [showKeyInput, setShowKeyInput] = useState(false)
   const [apiKey, setApiKey] = useState(localStorage.getItem('trinity_api_key') || '')
-  const [jwt, setJwt] = useState(localStorage.getItem('trinity_jwt') || '')
+  const [jwt, setJwtState] = useState(localStorage.getItem('trinity_jwt') || '')
   const [error, setError] = useState<string | null>(null)
   const [takenLeads, setTakenLeads] = useState<number[]>(JSON.parse(localStorage.getItem('taken_leads') || '[]'))
+
+  // Обновляем JWT при монтировании (если пользователь только что вошел)
+  useEffect(() => {
+    const savedJwt = localStorage.getItem('trinity_jwt') || ''
+    setJwtState(savedJwt)
+  }, [])
 
   const mockResults = [
     { id: 1, name: 'ООО «Белая улыбка»', director: 'Директор · Ирина С.', phone: '+7 (843) 2••-••-17', email: 'info@...', site: 'сайт', vk: true },
@@ -39,7 +45,6 @@ export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
     setError(null)
     setResults([])
 
-    // Если нет ни JWT, ни API-ключа — показываем мок
     if (!jwt.trim() && !apiKey.trim()) {
       setTimeout(() => {
         setResults(mockResults)
