@@ -1,10 +1,9 @@
 import WebApp from '@twa-dev/sdk'
 
-// Расширяем глобальный интерфейс Window, чтобы TS знал про Telegram
 declare global {
   interface Window {
     Telegram?: {
-      WebApp: any // Используем any для новых методов, которых нет в старых типах
+      WebApp: any
     }
   }
 }
@@ -30,18 +29,26 @@ export function initTelegram() {
   // 1. Сообщаем, что приложение готово
   wa.ready()
 
-  // 2. Разворачиваем на весь WebView
+  // 2. Разворачиваем на весь WebView (без шапки Telegram)
   wa.expand()
 
-  // 3. Bot API 8.0+: полный экран без шапки Telegram
-  if (typeof wa.requestFullscreen === 'function') {
-    try {
-      wa.requestFullscreen()
-      console.log('[TMA] requestFullscreen called')
-    } catch (e) {
-      console.log('[TMA] requestFullscreen failed:', e)
+  // 3. Агрессивный запуск Fullscreen (Bot API 8.0+)
+  const tryFullscreen = () => {
+    if (typeof wa.requestFullscreen === 'function') {
+      try {
+        wa.requestFullscreen()
+        wa.expand() // Иногда помогает вызвать expand после requestFullscreen
+        console.log('[TMA] requestFullscreen called')
+      } catch (e) {
+        console.log('[TMA] requestFullscreen failed:', e)
+      }
     }
   }
+
+  // Вызываем сразу
+  tryFullscreen()
+  // И через 300 мс (когда Telegram прогрузит интерфейс)
+  setTimeout(tryFullscreen, 300)
 
   // 4. Отключаем закрытие TMA свайпом вниз (Bot API 7.7+)
   if (typeof wa.disableVerticalSwipes === 'function') {
@@ -52,15 +59,7 @@ export function initTelegram() {
     }
   }
 
-  // 5. Устанавливаем цвета шапки и фона под тему
-  try {
-    wa.setHeaderColor('#ffffff')
-    wa.setBackgroundColor('#ffffff')
-  } catch (e) {
-    console.log('[TMA] color setup failed:', e)
-  }
-
-  // 6. Синхронизация высоты viewport
+  // 5. Синхронизация высоты viewport
   const applyViewportHeight = () => {
     const h = wa.viewportStableHeight || wa.viewportHeight || window.innerHeight
     document.documentElement.style.setProperty('--tg-viewport-height', `${h}px`)
