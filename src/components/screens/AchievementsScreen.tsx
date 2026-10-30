@@ -100,10 +100,10 @@ export function AchievementsScreen() {
       {/* Модалка с деталями ачивки (полноэкранная) */}
       {selected && (
         <div className="fixed inset-0 z-[100] bg-tg-bg animate-in slide-in-from-bottom duration-300 flex flex-col">
-          {/* Шапка модалки с учетом safe-area */}
+          {/* Шапка модалки с увеличенным safe-area */}
           <div 
-            className="flex items-center justify-between p-4 border-b border-gray-500/10 bg-tg-bg"
-            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
+            className="flex items-center justify-between px-4 pb-4 border-b border-gray-500/10 bg-tg-bg"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)' }}
           >
             <h2 className="text-lg font-bold">Детали ачивки</h2>
             <button onClick={() => setSelected(null)} className="p-2 bg-tg-secondary rounded-full">
