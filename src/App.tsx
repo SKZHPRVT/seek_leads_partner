@@ -16,6 +16,7 @@ import { AuthScreen } from './components/screens/AuthScreen'
 import { PaymentsScreen } from './components/screens/PaymentsScreen'
 import { SecurityScreen } from './components/screens/SecurityScreen'
 import { IncomeScreen } from './components/screens/IncomeScreen'
+import { NotificationsScreen } from './components/screens/NotificationsScreen'
 import { useToast } from './components/ui/Toast'
 
 function App() {
@@ -30,11 +31,11 @@ function App() {
   const [showPayments, setShowPayments] = useState(false)
   const [showSecurity, setShowSecurity] = useState(false)
   const [showIncome, setShowIncome] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
   const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null)
 
   const { showToast, ToastComponent } = useToast()
 
-  // Имитация уведомления о новом лиде (раз в 30 секунд)
   useEffect(() => {
     const timer = setInterval(() => {
       showToast('🔥 Новый лид в вашем регионе! Проверьте поиск.', 'success')
@@ -56,6 +57,7 @@ function App() {
        showPayments ? <PaymentsScreen onClose={() => setShowPayments(false)} /> :
        showSecurity ? <SecurityScreen onClose={() => setShowSecurity(false)} /> :
        showIncome ? <IncomeScreen onClose={() => setShowIncome(false)} /> :
+       showNotifications ? <NotificationsScreen onClose={() => setShowNotifications(false)} /> :
        selectedIntegration ? <IntegrationDetailScreen integrationId={selectedIntegration} onClose={() => setSelectedIntegration(null)} /> : (
         <Layout activeTab={activeTab} onTabChange={setActiveTab}>
           {activeTab === 'dashboard' && (
@@ -80,6 +82,7 @@ function App() {
               onNavigateToPayments={() => setShowPayments(true)}
               onNavigateToSecurity={() => setShowSecurity(true)}
               onNavigateToIntegrations={() => setActiveTab('integrations')}
+              onNavigateToNotifications={() => setShowNotifications(true)}
             />
           )}
         </Layout>

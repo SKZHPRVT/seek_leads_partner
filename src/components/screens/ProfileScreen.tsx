@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight, Settings, Users, Trophy } from 'lucide-react'
+import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight, Settings, Users, Trophy, Bell } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
+import { useToast } from '../ui/Toast'
 
 interface ProfileScreenProps {
   onNavigateToTariffs: () => void
@@ -12,6 +13,7 @@ interface ProfileScreenProps {
   onNavigateToPayments: () => void
   onNavigateToSecurity: () => void
   onNavigateToIntegrations: () => void
+  onNavigateToNotifications: () => void
 }
 
 export function ProfileScreen({ 
@@ -22,11 +24,13 @@ export function ProfileScreen({
   onNavigateToAchievements, 
   onNavigateToPayments, 
   onNavigateToSecurity,
-  onNavigateToIntegrations 
+  onNavigateToIntegrations,
+  onNavigateToNotifications
 }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
+  const { showToast } = useToast()
 
   const handleCopy = () => {
     navigator.clipboard.writeText(refLink)
@@ -106,6 +110,28 @@ export function ProfileScreen({
             </button>
           </div>
         </div>
+
+        <button onClick={onNavigateToNotifications} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center">
+              <Bell size={18} className="text-orange-500" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-sm">Уведомления</p>
+              <p className="text-xs text-tg-hint">История всех уведомлений</p>
+            </div>
+          </div>
+          <ChevronRight size={18} className="text-tg-hint" />
+        </button>
+
+        {/* Тестовая кнопка уведомления */}
+        <button 
+          onClick={() => showToast('🔔 Тестовое уведомление! Вот так это выглядит.', 'success')} 
+          className="w-full bg-brand/10 text-brand font-medium py-3 rounded-xl border border-brand/20 active:bg-brand/20 text-sm flex items-center justify-center space-x-2 mb-3"
+        >
+          <Bell size={16} />
+          <span>Показать тестовое уведомление</span>
+        </button>
 
         <button onClick={onNavigateToNetwork} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">
