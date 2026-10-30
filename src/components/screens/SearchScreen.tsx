@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2, LogIn } from 'lucide-react'
+import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2, LogIn, Share2 } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
@@ -14,7 +14,7 @@ interface Company {
 }
 
 interface SearchScreenProps {
-  onNavigateToAuth: () => void;
+  onNavigateToAuth: () => void
 }
 
 export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
@@ -27,7 +27,6 @@ export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
   const [error, setError] = useState<string | null>(null)
   const [takenLeads, setTakenLeads] = useState<number[]>(JSON.parse(localStorage.getItem('taken_leads') || '[]'))
 
-  // Обновляем JWT при монтировании (если пользователь только что вошел)
   useEffect(() => {
     const savedJwt = localStorage.getItem('trinity_jwt') || ''
     setJwtState(savedJwt)
@@ -123,6 +122,21 @@ export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
     WebApp.showAlert(`Лид «${company.name}» взят в работу! +150 ₽ начислено.`)
   }
 
+  const handleShareLead = (company: Company) => {
+    haptic('light')
+    const text = `Лид от Тринити:\n${company.name}\n${company.director ? company.director + '\n' : ''}${company.phone ? '📞 ' + company.phone + '\n' : ''}${company.email ? '✉️ ' + company.email + '\n' : ''}${company.site ? '🌐 ' + company.site : ''}`
+    
+    if (WebApp.shareToStory) {
+      // Поделиться в Stories (если поддерживается)
+      WebApp.shareToStory('https://seek-leads.ru/assets/og-image.png', {
+        text: text,
+      })
+    } else {
+      // Иначе — через открытие Telegram-ссылки
+      WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent('https://seek-leads.ru')}&text=${encodeURIComponent(text)}`)
+    }
+  }
+
   return (
     <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
       <div className="flex items-center justify-between mb-2">
@@ -204,17 +218,26 @@ export function SearchScreen({ onNavigateToAuth }: SearchScreenProps) {
                 {company.site && <span className="inline-flex items-center text-xs bg-tg-bg text-tg-text px-2.5 py-1.5 rounded-lg border border-gray-500/10"><Globe size={12} className="mr-1.5 text-brand" /> {company.site}</span>}
                 {company.vk && <span className="inline-flex items-center text-xs bg-blue-500/10 text-blue-500 px-2.5 py-1.5 rounded-lg border border-blue-500/20">ВК ✓</span>}
               </div>
-              <button 
-                onClick={() => handleTakeLead(company)}
-                disabled={isTaken}
-                className={`mt-4 w-full font-medium text-sm py-2.5 rounded-xl transition-colors flex items-center justify-center ${
-                  isTaken 
-                    ? 'bg-brand/10 text-brand cursor-default' 
-                    : 'bg-tg-bg text-tg-text border border-gray-500/10 active:bg-gray-500/5'
-                }`}
-              >
-                <Briefcase size={16} className="mr-2" /> {isTaken ? 'Уже в работе' : 'Взять в работу (+150 ₽)'}
-              </button>
+              <div className="flex space-x-2 mt-4">
+                <button 
+                  onClick={() => handleTakeLead(company)}
+                  disabled={isTaken}
+                  className={`flex-1 font-medium text-sm py-2.5 rounded-xl transition-colors flex items-center justify-center ${
+                    isTaken 
+                      ? 'bg-brand/10 text-brand cursor-default' 
+                      : 'bg-tg-bg text-tg-text border border-gray-500/10 active:bg-gray-500/5'
+                  }`}
+                >
+                  <Briefcase size={16} className="mr-2" /> {isTaken ? 'В работе' : 'Взять (+150 ₽)'}
+                </button>
+                <button 
+                  onClick={() => handleShareLead(company)}
+                  className="p-2.5 bg-tg-bg text-tg-text border border-gray-500/10 rounded-xl active:bg-gray-500/5"
+                  title="Поделиться лидом"
+                >
+                  <Share2 size={16} />
+                </button>
+              </div>
             </div>
           )
         })}

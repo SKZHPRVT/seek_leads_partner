@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Layout, TabType } from './components/Layout'
 import { DashboardScreen } from './components/screens/DashboardScreen'
 import { SearchScreen } from './components/screens/SearchScreen'
@@ -16,6 +16,7 @@ import { AuthScreen } from './components/screens/AuthScreen'
 import { PaymentsScreen } from './components/screens/PaymentsScreen'
 import { SecurityScreen } from './components/screens/SecurityScreen'
 import { IncomeScreen } from './components/screens/IncomeScreen'
+import { useToast } from './components/ui/Toast'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
@@ -31,45 +32,59 @@ function App() {
   const [showIncome, setShowIncome] = useState(false)
   const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null)
 
-  if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
-  if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
-  if (showApiKey) return <ApiKeyScreen onClose={() => setShowApiKey(false)} />
-  if (showSettings) return <SettingsScreen onClose={() => setShowSettings(false)} />
-  if (showNetwork) return <NetworkScreen onClose={() => setShowNetwork(false)} />
-  if (showAchievements) return <AchievementsScreen onClose={() => setShowAchievements(false)} />
-  if (showAuth) return <AuthScreen onClose={() => setShowAuth(false)} onAuthSuccess={() => setShowAuth(false)} />
-  if (showPayments) return <PaymentsScreen onClose={() => setShowPayments(false)} />
-  if (showSecurity) return <SecurityScreen onClose={() => setShowSecurity(false)} />
-  if (showIncome) return <IncomeScreen onClose={() => setShowIncome(false)} />
-  if (selectedIntegration) return <IntegrationDetailScreen integrationId={selectedIntegration} onClose={() => setSelectedIntegration(null)} />
+  const { showToast, ToastComponent } = useToast()
+
+  // Имитация уведомления о новом лиде (раз в 30 секунд)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      showToast('🔥 Новый лид в вашем регионе! Проверьте поиск.', 'success')
+    }, 30000)
+    return () => clearInterval(timer)
+  }, [showToast])
 
   return (
-    <Layout activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === 'dashboard' && (
-        <DashboardScreen 
-          onNavigateToSearch={() => setActiveTab('search')} 
-          onNavigateToHistory={() => setShowHistory(true)}
-          onNavigateToIncome={() => setShowIncome(true)}
-        />
+    <>
+      {ToastComponent}
+      
+      {showHistory ? <HistoryScreen onClose={() => setShowHistory(false)} /> :
+       showTariffs ? <TariffsScreen onClose={() => setShowTariffs(false)} /> :
+       showApiKey ? <ApiKeyScreen onClose={() => setShowApiKey(false)} /> :
+       showSettings ? <SettingsScreen onClose={() => setShowSettings(false)} /> :
+       showNetwork ? <NetworkScreen onClose={() => setShowNetwork(false)} /> :
+       showAchievements ? <AchievementsScreen onClose={() => setShowAchievements(false)} /> :
+       showAuth ? <AuthScreen onClose={() => setShowAuth(false)} onAuthSuccess={() => setShowAuth(false)} /> :
+       showPayments ? <PaymentsScreen onClose={() => setShowPayments(false)} /> :
+       showSecurity ? <SecurityScreen onClose={() => setShowSecurity(false)} /> :
+       showIncome ? <IncomeScreen onClose={() => setShowIncome(false)} /> :
+       selectedIntegration ? <IntegrationDetailScreen integrationId={selectedIntegration} onClose={() => setSelectedIntegration(null)} /> : (
+        <Layout activeTab={activeTab} onTabChange={setActiveTab}>
+          {activeTab === 'dashboard' && (
+            <DashboardScreen 
+              onNavigateToSearch={() => setActiveTab('search')} 
+              onNavigateToHistory={() => setShowHistory(true)}
+              onNavigateToIncome={() => setShowIncome(true)}
+            />
+          )}
+          {activeTab === 'search' && <SearchScreen onNavigateToAuth={() => setShowAuth(true)} />}
+          {activeTab === 'tasks' && <TasksScreen />}
+          {activeTab === 'integrations' && (
+            <IntegrationsScreen onNavigateToDetail={(id) => setSelectedIntegration(id)} />
+          )}
+          {activeTab === 'profile' && (
+            <ProfileScreen 
+              onNavigateToTariffs={() => setShowTariffs(true)} 
+              onNavigateToApiKey={() => setShowApiKey(true)}
+              onNavigateToSettings={() => setShowSettings(true)}
+              onNavigateToNetwork={() => setShowNetwork(true)}
+              onNavigateToAchievements={() => setShowAchievements(true)}
+              onNavigateToPayments={() => setShowPayments(true)}
+              onNavigateToSecurity={() => setShowSecurity(true)}
+              onNavigateToIntegrations={() => setActiveTab('integrations')}
+            />
+          )}
+        </Layout>
       )}
-      {activeTab === 'search' && <SearchScreen onNavigateToAuth={() => setShowAuth(true)} />}
-      {activeTab === 'tasks' && <TasksScreen />}
-      {activeTab === 'integrations' && (
-        <IntegrationsScreen onNavigateToDetail={(id) => setSelectedIntegration(id)} />
-      )}
-      {activeTab === 'profile' && (
-        <ProfileScreen 
-          onNavigateToTariffs={() => setShowTariffs(true)} 
-          onNavigateToApiKey={() => setShowApiKey(true)}
-          onNavigateToSettings={() => setShowSettings(true)}
-          onNavigateToNetwork={() => setShowNetwork(true)}
-          onNavigateToAchievements={() => setShowAchievements(true)}
-          onNavigateToPayments={() => setShowPayments(true)}
-          onNavigateToSecurity={() => setShowSecurity(true)}
-          onNavigateToIntegrations={() => setActiveTab('integrations')}
-        />
-      )}
-    </Layout>
+    </>
   )
 }
 
