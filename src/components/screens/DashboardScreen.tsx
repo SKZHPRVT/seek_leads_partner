@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TrendingUp, ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock } from 'lucide-react'
+import { ChevronRight, Zap, ArrowUpRight, Target, Award, Wallet, BarChart3, Clock } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
 interface DashboardScreenProps {
@@ -8,9 +8,8 @@ interface DashboardScreenProps {
 
 export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
   const [period, setPeriod] = useState<'week' | 'month' | 'all'>('month')
-  const firstName = 'Партнер' // Заглушка, потом возьмем из Telegram
+  const firstName = 'Партнер'
 
-  // Данные для графика в зависимости от периода
   const chartData = period === 'week' 
     ? [20, 35, 30, 50, 45, 70, 85]
     : period === 'month'
@@ -36,7 +35,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
 
   return (
     <div className="p-4 space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-24">
-      {/* Шапка */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-tg-hint text-sm">С возвращением,</p>
@@ -47,7 +45,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* ГЛАВНАЯ КНОПКА */}
       <button 
         onClick={onNavigateToSearch}
         className="w-full bg-gradient-to-r from-brand to-brand-dark text-white font-bold py-5 rounded-2xl shadow-xl shadow-brand/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-3 relative overflow-hidden group"
@@ -58,7 +55,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         <ChevronRight size={20} />
       </button>
 
-      {/* Доход с выбором периода */}
       <div className="bg-gradient-to-br from-brand to-brand-dark rounded-3xl p-5 text-white shadow-xl shadow-brand/20 relative overflow-hidden">
         <div className="flex justify-between items-start mb-3 relative z-10">
           <div>
@@ -71,7 +67,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
           </div>
         </div>
 
-        {/* Переключатель периода */}
         <div className="flex space-x-1 mb-3 relative z-10">
           {[
             { id: 'week', label: 'Неделя' },
@@ -90,7 +85,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
           ))}
         </div>
 
-        {/* График */}
         <div className="h-20 w-full mt-2 relative z-10">
           <svg viewBox="0 0 300 80" className="w-full h-full overflow-visible" preserveAspectRatio="none">
             <defs>
@@ -105,7 +99,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Блок "Моя статистика" */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg flex items-center"><BarChart3 size={18} className="mr-2 text-brand" />Моя статистика</h3>
@@ -142,7 +135,6 @@ export function DashboardScreen({ onNavigateToSearch }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* Последние действия */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-lg">Последние действия</h3>

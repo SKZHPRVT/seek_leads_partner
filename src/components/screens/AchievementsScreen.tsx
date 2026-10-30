@@ -28,8 +28,6 @@ export function AchievementsScreen() {
     { id: 8, title: 'Эксперт', desc: 'Написать пост о Тринити в соцсетях. Расскажи миру о нас.', progress: 0, max: 1, reward: '+200 ₽', icon: '✍️', category: 'Контент' },
   ]
 
-  const categories = ['Начало', 'Поиск', 'Партнерка', 'Интеграции', 'Инновации', 'Достижения', 'Особые', 'Контент']
-
   return (
     <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
       <div className="flex items-center justify-between mb-4">
@@ -40,7 +38,7 @@ export function AchievementsScreen() {
         </div>
       </div>
 
-      {/* Календарь ачивок (мини) */}
+      {/* Календарь ачивок */}
       <div className="bg-tg-secondary rounded-2xl p-4 border border-gray-500/10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
