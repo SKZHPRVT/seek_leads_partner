@@ -26,12 +26,12 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   }
 
   return (
-    <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden">
+    <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden text-tg-text">
       {/* Скроллируемый контент с безопасным верхним отступом */}
       <main 
         className="flex-1 overflow-y-auto" 
         style={{ 
-          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)', // 56px — примерная высота шапки Telegram
+          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 56px)',
           paddingBottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))' 
         }}
       >
@@ -40,7 +40,7 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
       
       {/* Фиксированное нижнее меню */}
       <nav 
-        className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 z-50" 
+        className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-500/10 z-50" 
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex justify-around items-center h-16 px-1">
