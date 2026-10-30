@@ -26,12 +26,14 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-tg-bg relative">
-      <main className="flex-1 overflow-y-auto pb-20">
+    <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden">
+      {/* Скроллируемый контент */}
+      <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))]">
         {children}
       </main>
       
-      <nav className="fixed bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 z-50 pb-safe">
+      {/* Фиксированное нижнее меню */}
+      <nav className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 pb-safe z-50">
         <div className="flex justify-around items-center h-16 px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon
