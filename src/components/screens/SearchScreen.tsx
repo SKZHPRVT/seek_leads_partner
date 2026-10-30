@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle, CheckCircle2 } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
@@ -90,7 +90,6 @@ export function SearchScreen() {
     setTakenLeads(newTaken)
     localStorage.setItem('taken_leads', JSON.stringify(newTaken))
 
-    // Сохраняем историю действия
     const history = JSON.parse(localStorage.getItem('trinity_history') || '[]')
     history.unshift({
       id: Date.now(),
