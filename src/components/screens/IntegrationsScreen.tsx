@@ -1,4 +1,4 @@
-import { Database, Link2, Bot, Sparkles, Code2, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { Database, Link2, Bot, Sparkles, Code2, CheckCircle2 } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
@@ -91,7 +91,6 @@ export function IntegrationsScreen() {
         })}
       </div>
 
-      {/* Инфо-блок */}
       <div className="bg-brand/5 rounded-2xl p-4 border border-brand/10 flex items-start space-x-3">
         <CheckCircle2 size={20} className="text-brand flex-shrink-0 mt-0.5" />
         <div>
