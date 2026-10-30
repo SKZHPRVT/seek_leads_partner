@@ -28,12 +28,12 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   return (
     <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden">
       {/* Скроллируемый контент */}
-      <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))]">
+      <main className="flex-1 overflow-y-auto" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         {children}
       </main>
       
       {/* Фиксированное нижнее меню */}
-      <nav className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 pb-safe z-50">
+      <nav className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-200/20 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="flex justify-around items-center h-16 px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon

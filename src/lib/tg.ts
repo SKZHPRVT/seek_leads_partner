@@ -9,7 +9,6 @@ declare global {
 }
 
 export const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp?.initData !== undefined
-
 export const tg = isTelegram ? WebApp : undefined
 
 export function initTelegram() {
@@ -18,19 +17,20 @@ export function initTelegram() {
     return
   }
 
-  const wa = window.Telegram?.WebApp || tg
+  const wa = window.Telegram?.WebApp
   if (!wa) return
 
-  console.log('[TMA] Initializing Telegram WebApp', {
+  console.log('[TMA] Initializing', {
     version: wa.version,
     platform: wa.platform,
+    isExpanded: wa.isExpanded
   })
 
   // 1. Сообщаем, что приложение готово
-  wa.ready()
+  if (wa.ready) wa.ready()
 
-  // 2. Разворачиваем на весь WebView (без шапки Telegram)
-  wa.expand()
+  // 2. Разворачиваем на весь WebView
+  if (wa.expand) wa.expand()
 
   // 3. Агрессивный запуск Fullscreen (Bot API 8.0+)
   const tryFullscreen = () => {
@@ -45,18 +45,15 @@ export function initTelegram() {
     }
   }
 
-  // Вызываем сразу
   tryFullscreen()
-  // И через 300 мс (когда Telegram прогрузит интерфейс)
-  setTimeout(tryFullscreen, 300)
+  setTimeout(tryFullscreen, 200)
+  setTimeout(tryFullscreen, 500)
 
-  // 4. Отключаем закрытие TMA свайпом вниз (Bot API 7.7+)
+  // 4. Отключаем закрытие TMA свайпом вниз
   if (typeof wa.disableVerticalSwipes === 'function') {
     try {
       wa.disableVerticalSwipes()
-    } catch (e) {
-      console.log('[TMA] disableVerticalSwipes failed:', e)
-    }
+    } catch (e) {}
   }
 
   // 5. Синхронизация высоты viewport
@@ -86,16 +83,13 @@ export function haptic(type: HapticType) {
     }
     return
   }
-
   try {
     if (type === 'light' || type === 'medium' || type === 'heavy') {
       wa.HapticFeedback.impactOccurred(type)
     } else {
       wa.HapticFeedback.notificationOccurred(type)
     }
-  } catch (e) {
-    console.warn('[TMA] Haptic failed:', e)
-  }
+  } catch (e) {}
 }
 
 export function getUserId(): string {
