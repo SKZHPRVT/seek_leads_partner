@@ -14,6 +14,7 @@ import { AchievementsScreen } from './components/screens/AchievementsScreen'
 import { AuthScreen } from './components/screens/AuthScreen'
 import { PaymentsScreen } from './components/screens/PaymentsScreen'
 import { SecurityScreen } from './components/screens/SecurityScreen'
+import { IncomeScreen } from './components/screens/IncomeScreen'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
@@ -26,6 +27,7 @@ function App() {
   const [showAuth, setShowAuth] = useState(false)
   const [showPayments, setShowPayments] = useState(false)
   const [showSecurity, setShowSecurity] = useState(false)
+  const [showIncome, setShowIncome] = useState(false)
 
   if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
   if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
@@ -36,6 +38,7 @@ function App() {
   if (showAuth) return <AuthScreen onClose={() => setShowAuth(false)} onAuthSuccess={() => setShowAuth(false)} />
   if (showPayments) return <PaymentsScreen onClose={() => setShowPayments(false)} />
   if (showSecurity) return <SecurityScreen onClose={() => setShowSecurity(false)} />
+  if (showIncome) return <IncomeScreen onClose={() => setShowIncome(false)} />
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -43,6 +46,7 @@ function App() {
         <DashboardScreen 
           onNavigateToSearch={() => setActiveTab('search')} 
           onNavigateToHistory={() => setShowHistory(true)}
+          onNavigateToIncome={() => setShowIncome(true)}
         />
       )}
       {activeTab === 'search' && <SearchScreen onNavigateToAuth={() => setShowAuth(true)} />}
