@@ -1,6 +1,14 @@
 import WebApp from '@twa-dev/sdk'
 
-// Проверяем, запущены ли мы в Telegram
+// Расширяем глобальный интерфейс Window, чтобы TS знал про Telegram
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp: any // Используем any для новых методов, которых нет в старых типах
+    }
+  }
+}
+
 export const isTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp?.initData !== undefined
 
 export const tg = isTelegram ? WebApp : undefined
@@ -11,21 +19,24 @@ export function initTelegram() {
     return
   }
 
+  const wa = window.Telegram?.WebApp || tg
+  if (!wa) return
+
   console.log('[TMA] Initializing Telegram WebApp', {
-    version: tg?.version,
-    platform: tg?.platform,
+    version: wa.version,
+    platform: wa.platform,
   })
 
   // 1. Сообщаем, что приложение готово
-  tg?.ready()
+  wa.ready()
 
   // 2. Разворачиваем на весь WebView
-  tg?.expand()
+  wa.expand()
 
   // 3. Bot API 8.0+: полный экран без шапки Telegram
-  if (tg && typeof tg.requestFullscreen === 'function') {
+  if (typeof wa.requestFullscreen === 'function') {
     try {
-      tg.requestFullscreen()
+      wa.requestFullscreen()
       console.log('[TMA] requestFullscreen called')
     } catch (e) {
       console.log('[TMA] requestFullscreen failed:', e)
@@ -33,45 +44,44 @@ export function initTelegram() {
   }
 
   // 4. Отключаем закрытие TMA свайпом вниз (Bot API 7.7+)
-  if (tg && typeof tg.disableVerticalSwipes === 'function') {
+  if (typeof wa.disableVerticalSwipes === 'function') {
     try {
-      tg.disableVerticalSwipes()
+      wa.disableVerticalSwipes()
     } catch (e) {
       console.log('[TMA] disableVerticalSwipes failed:', e)
     }
   }
 
-  // 5. Устанавливаем цвета шапки и фона под тему (можно заменить на свои)
+  // 5. Устанавливаем цвета шапки и фона под тему
   try {
-    tg?.setHeaderColor('#ffffff') // или var(--tg-theme-bg-color)
-    tg?.setBackgroundColor('#ffffff')
+    wa.setHeaderColor('#ffffff')
+    wa.setBackgroundColor('#ffffff')
   } catch (e) {
     console.log('[TMA] color setup failed:', e)
   }
 
   // 6. Синхронизация высоты viewport
   const applyViewportHeight = () => {
-    const h = tg?.viewportStableHeight || tg?.viewportHeight || window.innerHeight
+    const h = wa.viewportStableHeight || wa.viewportHeight || window.innerHeight
     document.documentElement.style.setProperty('--tg-viewport-height', `${h}px`)
     document.documentElement.style.setProperty('--real-vh', `${h}px`)
   }
 
   applyViewportHeight()
-  tg?.onEvent('viewportChanged', applyViewportHeight)
+  wa.onEvent('viewportChanged', applyViewportHeight)
 
   window.addEventListener('resize', applyViewportHeight)
   window.addEventListener('orientationchange', () => setTimeout(applyViewportHeight, 300))
   
-  // Принудительный пересчет через таймеры
   setTimeout(applyViewportHeight, 200)
   setTimeout(applyViewportHeight, 1000)
 }
 
-// Функция для вибрации (Haptic Feedback)
 export type HapticType = 'light' | 'medium' | 'heavy' | 'success' | 'error' | 'warning'
 
 export function haptic(type: HapticType) {
-  if (!tg?.HapticFeedback) {
+  const wa = window.Telegram?.WebApp || tg
+  if (!wa?.HapticFeedback) {
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try { navigator.vibrate(type === 'error' ? [40, 40, 40] : 20) } catch {}
     }
@@ -80,24 +90,26 @@ export function haptic(type: HapticType) {
 
   try {
     if (type === 'light' || type === 'medium' || type === 'heavy') {
-      tg.HapticFeedback.impactOccurred(type)
+      wa.HapticFeedback.impactOccurred(type)
     } else {
-      tg.HapticFeedback.notificationOccurred(type)
+      wa.HapticFeedback.notificationOccurred(type)
     }
   } catch (e) {
     console.warn('[TMA] Haptic failed:', e)
   }
 }
 
-// Получить данные пользователя
 export function getUserId(): string {
-  return String(tg?.initDataUnsafe?.user?.id ?? 'local')
+  const wa = window.Telegram?.WebApp || tg
+  return String(wa?.initDataUnsafe?.user?.id ?? 'local')
 }
 
 export function getInitData(): string {
-  return tg?.initData ?? ''
+  const wa = window.Telegram?.WebApp || tg
+  return wa?.initData ?? ''
 }
 
 export function getUserFirstName(): string {
-  return tg?.initDataUnsafe?.user?.first_name ?? 'Партнер'
+  const wa = window.Telegram?.WebApp || tg
+  return wa?.initDataUnsafe?.user?.first_name ?? 'Партнер'
 }
