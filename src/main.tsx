@@ -2,10 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
-import WebApp from '@twa-dev/sdk'
+import { initTelegram } from './lib/tg'
 
-WebApp.ready();
-WebApp.expand();
+// Инициализируем Telegram WebApp (Fullscreen, Viewport, Haptics)
+initTelegram()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

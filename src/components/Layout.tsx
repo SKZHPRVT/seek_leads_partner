@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { LayoutDashboard, Search, Trophy, Link2, User } from 'lucide-react'
 import clsx from 'clsx'
+import { haptic } from '../lib/tg'
 
 export type TabType = 'dashboard' | 'search' | 'achievements' | 'integrations' | 'profile'
 
@@ -19,9 +20,14 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
     { id: 'profile', label: 'Профиль', icon: User },
   ] as const
 
+  const handleTabChange = (id: TabType) => {
+    haptic('light')
+    onTabChange(id)
+  }
+
   return (
-    <div className="flex flex-col h-[100dvh] bg-tg-bg">
-      <main className="flex-1 overflow-y-auto pb-20">
+    <div className="flex flex-col h-[var(--tg-viewport-height)] bg-tg-bg">
+      <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))]">
         {children}
       </main>
       
@@ -33,7 +39,7 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
             return (
               <button
                 key={tab.id}
-                onClick={() => onTabChange(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={clsx(
                   "flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors rounded-lg",
                   isActive ? "text-tg-button" : "text-tg-hint hover:text-tg-text"

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Search, Phone, Mail, Globe, Briefcase, Loader2, Key, AlertCircle } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
+import { haptic } from '../../lib/tg'
 
 interface Company {
   id: number;
@@ -27,6 +28,7 @@ export function SearchScreen() {
   ]
 
   const handleSearch = async () => {
+    haptic('medium')
     setIsSearching(true)
     setError(null)
     setResults([])
@@ -35,6 +37,7 @@ export function SearchScreen() {
       setTimeout(() => {
         setResults(mockResults)
         setIsSearching(false)
+        haptic('success')
       }, 1000)
       return
     }
@@ -62,10 +65,12 @@ export function SearchScreen() {
           site: c.site || c.website || null,
           vk: !!c.vk
         })))
+        haptic('success')
       } else {
         setResults(mockResults)
       }
     } catch (err: any) {
+      haptic('error')
       setError(err.message || 'Ошибка поиска')
       WebApp.showAlert(err.message || 'Ошибка поиска')
     } finally {

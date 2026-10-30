@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --tg-viewport-height: 100vh;
+  --real-vh: 100vh;
+}
+
 body {
   background-color: var(--tg-theme-bg-color, #ffffff);
   color: var(--tg-theme-text-color, #000000);
@@ -9,9 +14,17 @@ body {
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none; /* Отключаем эффект оттягивания */
 }
 
 /* Скрываем скроллбар для чистоты */
 ::-webkit-scrollbar {
   display: none;
+}
+
+/* Класс для полноэкранного контейнера */
+.tma-container {
+  height: var(--tg-viewport-height);
+  display: flex;
+  flex-direction: column;
 }
