@@ -1,4 +1,4 @@
-import { ArrowLeft, CreditCard, CheckCircle2, Clock } from 'lucide-react'
+import { ArrowLeft, CreditCard } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 import { ScreenWrapper } from '../ui/ScreenWrapper'
