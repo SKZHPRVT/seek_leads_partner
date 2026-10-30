@@ -9,6 +9,8 @@ import { HistoryScreen } from './components/screens/HistoryScreen'
 import { TariffsScreen } from './components/screens/TariffsScreen'
 import { ApiKeyScreen } from './components/screens/ApiKeyScreen'
 import { SettingsScreen } from './components/screens/SettingsScreen'
+import { TasksScreen } from './components/screens/TasksScreen'
+import { NetworkScreen } from './components/screens/NetworkScreen'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
@@ -16,11 +18,15 @@ function App() {
   const [showTariffs, setShowTariffs] = useState(false)
   const [showApiKey, setShowApiKey] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showNetwork, setShowNetwork] = useState(false)
+  const [showAchievements, setShowAchievements] = useState(false)
 
   if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
   if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
   if (showApiKey) return <ApiKeyScreen onClose={() => setShowApiKey(false)} />
   if (showSettings) return <SettingsScreen onClose={() => setShowSettings(false)} />
+  if (showNetwork) return <NetworkScreen onClose={() => setShowNetwork(false)} />
+  if (showAchievements) return <AchievementsScreen onClose={() => setShowAchievements(false)} />
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -31,13 +37,15 @@ function App() {
         />
       )}
       {activeTab === 'search' && <SearchScreen />}
-      {activeTab === 'achievements' && <AchievementsScreen />}
+      {activeTab === 'tasks' && <TasksScreen />}
       {activeTab === 'integrations' && <IntegrationsScreen />}
       {activeTab === 'profile' && (
         <ProfileScreen 
           onNavigateToTariffs={() => setShowTariffs(true)} 
           onNavigateToApiKey={() => setShowApiKey(true)}
           onNavigateToSettings={() => setShowSettings(true)}
+          onNavigateToNetwork={() => setShowNetwork(true)}
+          onNavigateToAchievements={() => setShowAchievements(true)}
         />
       )}
     </Layout>

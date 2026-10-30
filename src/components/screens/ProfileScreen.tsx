@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight, Settings } from 'lucide-react'
+import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight, Settings, Users, Trophy } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
@@ -7,9 +7,11 @@ interface ProfileScreenProps {
   onNavigateToTariffs: () => void
   onNavigateToApiKey: () => void
   onNavigateToSettings: () => void
+  onNavigateToNetwork: () => void
+  onNavigateToAchievements: () => void
 }
 
-export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings, onNavigateToNetwork, onNavigateToAchievements }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -24,11 +26,6 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
   const handleShare = () => {
     haptic('light')
     WebApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Попробуй Тринити — ИИ для поиска контактов!`)
-  }
-
-  const handleAction = (action: string) => {
-    haptic('light')
-    WebApp.showAlert(`Раздел "${action}" в разработке`)
   }
 
   return (
@@ -97,6 +94,32 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavig
             </button>
           </div>
         </div>
+
+        <button onClick={onNavigateToNetwork} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Users size={18} className="text-green-500" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-sm">Моя сеть</p>
+              <p className="text-xs text-tg-hint">Рефералы и менеджеры</p>
+            </div>
+          </div>
+          <ChevronRight size={18} className="text-tg-hint" />
+        </button>
+
+        <button onClick={onNavigateToAchievements} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
+              <Trophy size={18} className="text-yellow-500" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-sm">Ачивки</p>
+              <p className="text-xs text-tg-hint">Достижения и награды</p>
+            </div>
+          </div>
+          <ChevronRight size={18} className="text-tg-hint" />
+        </button>
 
         <button onClick={onNavigateToApiKey} className="w-full bg-tg-secondary rounded-2xl p-4 border border-gray-500/10 mb-3 flex items-center justify-between active:bg-gray-500/5">
           <div className="flex items-center space-x-3">

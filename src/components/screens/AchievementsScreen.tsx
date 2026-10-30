@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trophy, Lock, CheckCircle2, X, Target } from 'lucide-react'
+import { ArrowLeft, Trophy, Lock, CheckCircle2, X, Target } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
 interface Achievement {
@@ -14,7 +14,11 @@ interface Achievement {
   category: string
 }
 
-export function AchievementsScreen() {
+interface AchievementsScreenProps {
+  onClose: () => void
+}
+
+export function AchievementsScreen({ onClose }: AchievementsScreenProps) {
   const [selected, setSelected] = useState<Achievement | null>(null)
 
   const achievements: Achievement[] = [
@@ -29,16 +33,18 @@ export function AchievementsScreen() {
   ]
 
   return (
-    <div className="p-4 space-y-4 animate-in fade-in duration-300 pb-24">
-      <div className="flex items-center justify-between mb-4">
+    <div className="p-4 space-y-4 animate-in slide-in-from-right duration-300 pb-24 min-h-screen bg-tg-bg">
+      <div className="flex items-center space-x-3 mb-4">
+        <button onClick={() => { haptic('light'); onClose(); }} className="p-2 bg-tg-secondary rounded-full">
+          <ArrowLeft size={20} />
+        </button>
         <h1 className="text-2xl font-bold">Ачивки</h1>
-        <div className="flex items-center text-brand bg-brand/10 px-3 py-1.5 rounded-full">
+        <div className="flex items-center text-brand bg-brand/10 px-3 py-1.5 rounded-full ml-auto">
           <Trophy size={16} className="mr-1.5" />
           <span className="text-sm font-semibold">2 / 8</span>
         </div>
       </div>
 
-      {/* Сетка ачивок */}
       <div className="grid grid-cols-2 gap-3">
         {achievements.map((ach) => {
           const isCompleted = ach.progress >= ach.max
@@ -78,7 +84,6 @@ export function AchievementsScreen() {
         })}
       </div>
 
-      {/* Модалка-шторка */}
       {selected && (
         <div 
           className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm animate-in fade-in" 

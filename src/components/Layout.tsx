@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
-import { LayoutDashboard, Search, Trophy, Link2, User } from 'lucide-react'
+import { LayoutDashboard, Search, Briefcase, Link2, User } from 'lucide-react'
 import clsx from 'clsx'
 import { haptic } from '../lib/tg'
 
-export type TabType = 'dashboard' | 'search' | 'achievements' | 'integrations' | 'profile'
+export type TabType = 'dashboard' | 'search' | 'tasks' | 'integrations' | 'profile'
 
 interface LayoutProps {
   children: ReactNode
@@ -15,7 +15,7 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
   const tabs = [
     { id: 'dashboard', label: 'Главная', icon: LayoutDashboard },
     { id: 'search', label: 'Поиск', icon: Search },
-    { id: 'achievements', label: 'Ачивки', icon: Trophy },
+    { id: 'tasks', label: 'Биржа', icon: Briefcase },
     { id: 'integrations', label: 'Связи', icon: Link2 },
     { id: 'profile', label: 'Профиль', icon: User },
   ] as const
@@ -27,7 +27,6 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
 
   return (
     <div className="flex flex-col h-full w-full bg-tg-bg relative overflow-hidden text-tg-text">
-      {/* Скроллируемый контент с безопасным верхним отступом */}
       <main 
         className="flex-1 overflow-y-auto" 
         style={{ 
@@ -38,7 +37,6 @@ export function Layout({ children, activeTab, onTabChange }: LayoutProps) {
         {children}
       </main>
       
-      {/* Фиксированное нижнее меню */}
       <nav 
         className="absolute bottom-0 w-full bg-tg-secondary border-t border-gray-500/10 z-50" 
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
