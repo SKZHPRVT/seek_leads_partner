@@ -8,24 +8,19 @@ import { ProfileScreen } from './components/screens/ProfileScreen'
 import { HistoryScreen } from './components/screens/HistoryScreen'
 import { TariffsScreen } from './components/screens/TariffsScreen'
 import { ApiKeyScreen } from './components/screens/ApiKeyScreen'
+import { SettingsScreen } from './components/screens/SettingsScreen'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [showHistory, setShowHistory] = useState(false)
   const [showTariffs, setShowTariffs] = useState(false)
   const [showApiKey, setShowApiKey] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
-  if (showHistory) {
-    return <HistoryScreen onClose={() => setShowHistory(false)} />
-  }
-
-  if (showTariffs) {
-    return <TariffsScreen onClose={() => setShowTariffs(false)} />
-  }
-
-  if (showApiKey) {
-    return <ApiKeyScreen onClose={() => setShowApiKey(false)} />
-  }
+  if (showHistory) return <HistoryScreen onClose={() => setShowHistory(false)} />
+  if (showTariffs) return <TariffsScreen onClose={() => setShowTariffs(false)} />
+  if (showApiKey) return <ApiKeyScreen onClose={() => setShowApiKey(false)} />
+  if (showSettings) return <SettingsScreen onClose={() => setShowSettings(false)} />
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab}>
@@ -42,6 +37,7 @@ function App() {
         <ProfileScreen 
           onNavigateToTariffs={() => setShowTariffs(true)} 
           onNavigateToApiKey={() => setShowApiKey(true)}
+          onNavigateToSettings={() => setShowSettings(true)}
         />
       )}
     </Layout>

@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight } from 'lucide-react'
+import { CheckCircle2, User, CreditCard, Shield, LogOut, Copy, Share2, Key, Link2, ChevronRight, Settings } from 'lucide-react'
 import WebApp from '@twa-dev/sdk'
 import { haptic } from '../../lib/tg'
 
 interface ProfileScreenProps {
   onNavigateToTariffs: () => void
   onNavigateToApiKey: () => void
+  onNavigateToSettings: () => void
 }
 
-export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey }: ProfileScreenProps) {
+export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey, onNavigateToSettings }: ProfileScreenProps) {
   const user = WebApp.initDataUnsafe?.user
   const [copied, setCopied] = useState(false)
   const refLink = 'https://t.me/seek_leads_partner_bot?start=ref_12345'
@@ -32,18 +33,23 @@ export function ProfileScreen({ onNavigateToTariffs, onNavigateToApiKey }: Profi
 
   return (
     <div className="p-4 space-y-6 animate-in fade-in duration-300 pb-24">
-      <div className="flex items-center space-x-4">
-        <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center border border-brand/20">
-          {user?.photo_url ? (
-            <img src={user.photo_url} alt="Avatar" className="w-full h-full rounded-full object-cover" />
-          ) : (
-            <User size={32} className="text-brand" />
-          )}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center border border-brand/20">
+            {user?.photo_url ? (
+              <img src={user.photo_url} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+            ) : (
+              <User size={32} className="text-brand" />
+            )}
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">{user?.first_name || 'Партнер'} {user?.last_name || ''}</h1>
+            <p className="text-sm text-tg-hint">ID: {user?.id || '000000'}</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold">{user?.first_name || 'Партнер'} {user?.last_name || ''}</h1>
-          <p className="text-sm text-tg-hint">ID: {user?.id || '000000'}</p>
-        </div>
+        <button onClick={onNavigateToSettings} className="p-2 bg-tg-secondary rounded-full">
+          <Settings size={20} className="text-tg-hint" />
+        </button>
       </div>
 
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden border border-gray-700">

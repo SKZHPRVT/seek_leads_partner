@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowLeft, Filter, TrendingUp, TrendingDown } from 'lucide-react'
 import { haptic } from '../../lib/tg'
 
@@ -6,19 +6,36 @@ interface HistoryScreenProps {
   onClose: () => void
 }
 
+interface Transaction {
+  id: number
+  title: string
+  time: string
+  amount: number
+  type: 'income' | 'payout'
+  icon: string
+}
+
 export function HistoryScreen({ onClose }: HistoryScreenProps) {
   const [filter, setFilter] = useState<'all' | 'income' | 'payout'>('all')
+  const [transactions, setTransactions] = useState<Transaction[]>([])
 
-  const allTransactions = [
-    { id: 1, title: 'Взят лид «Дента Плюс»', time: 'Сегодня, 14:30', amount: 150, type: 'income', icon: '🎯' },
-    { id: 2, title: 'Ачивка «Первый лид»', time: 'Сегодня, 12:15', amount: 100, type: 'income', icon: '🏆' },
-    { id: 3, title: 'Выплата на карту', time: 'Вчера, 18:00', amount: -2000, type: 'payout', icon: '💸' },
-    { id: 4, title: 'Взят лид «Белая улыбка»', time: 'Вчера, 11:20', amount: 150, type: 'income', icon: '🎯' },
-    { id: 5, title: 'Ачивка «Мастер поиска»', time: '25.10, 09:00', amount: 200, type: 'income', icon: '🏆' },
-    { id: 6, title: 'Выплата на карту', time: '24.10, 16:45', amount: -1500, type: 'payout', icon: '💸' },
-  ]
+  useEffect(() => {
+    const saved = localStorage.getItem('trinity_history')
+    if (saved) {
+      setTransactions(JSON.parse(saved))
+    } else {
+      // Дефолтная история, если ничего нет
+      const defaultHistory: Transaction[] = [
+        { id: 1, title: 'Взят лид «Дента Плюс»', time: 'Сегодня, 14:30', amount: 150, type: 'income', icon: '🎯' },
+        { id: 2, title: 'Ачивка «Первый лид»', time: 'Сегодня, 12:15', amount: 100, type: 'income', icon: '🏆' },
+        { id: 3, title: 'Выплата на карту', time: 'Вчера, 18:00', amount: -2000, type: 'payout', icon: '💸' },
+      ]
+      setTransactions(defaultHistory)
+      localStorage.setItem('trinity_history', JSON.stringify(defaultHistory))
+    }
+  }, [])
 
-  const filtered = allTransactions.filter(t => {
+  const filtered = transactions.filter(t => {
     if (filter === 'all') return true
     return t.type === filter
   })
@@ -32,7 +49,6 @@ export function HistoryScreen({ onClose }: HistoryScreenProps) {
         <h1 className="text-2xl font-bold">История</h1>
       </div>
 
-      {/* Фильтры */}
       <div className="flex space-x-2 overflow-x-auto pb-2">
         {[
           { id: 'all', label: 'Все', icon: Filter },
@@ -52,7 +68,6 @@ export function HistoryScreen({ onClose }: HistoryScreenProps) {
         ))}
       </div>
 
-      {/* Список транзакций */}
       <div className="bg-tg-secondary rounded-2xl border border-gray-500/10 overflow-hidden">
         {filtered.length === 0 ? (
           <div className="p-8 text-center text-tg-hint text-sm">Нет транзакций</div>
